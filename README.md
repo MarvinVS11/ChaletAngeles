@@ -15,7 +15,7 @@ admin/    Panel administrativo (React + Vite)
 server/   API REST (Express + Mongoose), usada por ambos frontends
 ```
 
-`client` y `admin` son proyectos independientes: cada uno tiene su propio `package.json` y `vercel.json`, por lo que se pueden desplegar en Vercel como dos proyectos separados (root directory `client` y `admin` respectivamente), ambos apuntando a la misma API.
+`client`, `admin` y `server` son proyectos independientes, cada uno con su propio `package.json`, pensados para desplegarse como **tres proyectos Vercel separados** (root directory `client`, `admin` y `server` respectivamente). El servidor corre en Vercel como funciones serverless (`server/api/[...path].js`), no como proceso persistente.
 
 ## Requisitos
 
@@ -76,7 +76,12 @@ Disponible en `http://localhost:5174`. Iniciar sesión con las credenciales `ADM
 - `PATCH /api/reservations/:id/status` — cambiar estado de una reserva (requiere token admin)
 - `POST /api/auth/login` — iniciar sesión en el panel admin
 
-## Despliegue
+## Despliegue (Vercel)
 
-- **client** y **admin** se despliegan como dos proyectos Vercel independientes (root directory apuntando a cada carpeta). Cada uno necesita su propia variable `VITE_API_URL` apuntando a la API pública.
-- **server** debe desplegarse aparte (por ejemplo Render, Railway o Fly.io), ya que es un servidor Express de larga duración. Configurar ahí `CLIENT_URL` y `ADMIN_URL` con las URLs finales de los dos frontends para que CORS los acepte.
+Los tres proyectos se despliegan por separado en Vercel, todos importando el mismo repositorio con distinto "Root Directory":
+
+1. **server** (root directory `server`): funciones serverless en `server/api/[...path].js`, sin build command. Variables de entorno: `MONGODB_URI`, `JWT_SECRET`, `ADMIN_USER`, `ADMIN_PASSWORD`, `CLIENT_URL`, `ADMIN_URL`.
+2. **client** (root directory `client`): variable `VITE_API_URL` = `https://<tu-proyecto-server>.vercel.app/api`.
+3. **admin** (root directory `admin`): variable `VITE_API_URL` = `https://<tu-proyecto-server>.vercel.app/api`.
+
+Después de desplegar `client` y `admin`, volvé al proyecto `server` en Vercel y completá `CLIENT_URL` / `ADMIN_URL` con las URLs finales de esos dos despliegues (para que CORS los acepte), y volvé a desplegar.
