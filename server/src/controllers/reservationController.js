@@ -59,4 +59,34 @@ async function createReservation(req, res) {
   res.status(201).json(reservation);
 }
 
-module.exports = { checkAvailability, createReservation };
+async function listReservations(req, res) {
+  const reservations = await Reservation.find().sort({ checkIn: 1 });
+  res.json(reservations);
+}
+
+async function updateReservationStatus(req, res) {
+  const { status } = req.body;
+
+  if (!['pending', 'confirmed', 'cancelled'].includes(status)) {
+    return res.status(400).json({ message: 'Estado inválido' });
+  }
+
+  const reservation = await Reservation.findByIdAndUpdate(
+    req.params.id,
+    { status },
+    { returnDocument: 'after' }
+  );
+
+  if (!reservation) {
+    return res.status(404).json({ message: 'Reserva no encontrada' });
+  }
+
+  res.json(reservation);
+}
+
+module.exports = {
+  checkAvailability,
+  createReservation,
+  listReservations,
+  updateReservationStatus,
+};

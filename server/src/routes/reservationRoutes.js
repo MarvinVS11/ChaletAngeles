@@ -1,10 +1,17 @@
 const express = require('express');
 const { body, validationResult } = require('express-validator');
-const { checkAvailability, createReservation } = require('../controllers/reservationController');
+const {
+  checkAvailability,
+  createReservation,
+  listReservations,
+  updateReservationStatus,
+} = require('../controllers/reservationController');
+const requireAuth = require('../middleware/auth');
 
 const router = express.Router();
 
 router.get('/availability', checkAvailability);
+router.get('/', requireAuth, listReservations);
 
 router.post(
   '/',
@@ -25,5 +32,7 @@ router.post(
   },
   createReservation
 );
+
+router.patch('/:id/status', requireAuth, updateReservationStatus);
 
 module.exports = router;

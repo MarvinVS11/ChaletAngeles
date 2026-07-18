@@ -49,7 +49,10 @@ function Reservas() {
 
   return (
     <div className="page reservas">
-      <h1>Reservá tu estadía</h1>
+      <div className="page-hero">
+        <h1>Reservá tu estadía</h1>
+        <p>Completá tus datos y te contactaremos para confirmar disponibilidad.</p>
+      </div>
       <form onSubmit={handleSubmit} className="reservation-form">
         <label>
           Nombre completo

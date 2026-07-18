@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 500" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2f4a3e" />
+      <stop offset="45%" stop-color="#6c7a4a" />
+      <stop offset="75%" stop-color="#e0b24a" />
+      <stop offset="100%" stop-color="#f4d873" />
+    </linearGradient>
+    <linearGradient id="mtn-back" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a4a3a" />
+      <stop offset="100%" stop-color="#26311f" />
+    </linearGradient>
+    <linearGradient id="mtn-front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f2a19" />
+      <stop offset="100%" stop-color="#141d10" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="500" fill="url(#sky)" />
+
+  <circle cx="1180" cy="150" r="70" fill="#ffe38a" opacity="0.85" />
+
+  <path d="M0,300 L120,220 L240,290 L380,180 L520,270 L680,200 L820,280 L980,210 L1140,270 L1300,200 L1460,260 L1600,220 L1600,500 L0,500 Z" fill="url(#mtn-back)" opacity="0.85" />
+
+  <path d="M0,380 L160,300 L320,360 L480,280 L640,350 L800,290 L980,360 L1160,300 L1340,365 L1600,310 L1600,500 L0,500 Z" fill="url(#mtn-front)" />
+
+  <g transform="translate(660,300)">
+    <rect x="0" y="60" width="220" height="100" fill="#3a2c1d" />
+    <polygon points="-20,60 110,-30 240,60" fill="#5a4030" />
+    <rect x="95" y="100" width="30" height="60" fill="#1a130c" />
+    <rect x="30" y="90" width="28" height="28" fill="#f4d873" opacity="0.9" />
+    <rect x="162" y="90" width="28" height="28" fill="#f4d873" opacity="0.9" />
+    <rect x="105" y="-5" width="10" height="30" fill="#2a2018" />
+  </g>
+
+  <g fill="#141d10">
+    <polygon points="520,360 540,300 560,360" />
+    <polygon points="545,370 570,295 595,370" />
+    <polygon points="900,365 922,305 944,365" />
+    <polygon points="930,375 955,300 980,375" />
+  </g>
+</svg>

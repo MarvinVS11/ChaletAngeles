@@ -9,6 +9,7 @@ const chaletInfoSchema = new mongoose.Schema(
     maxGuests: { type: Number, required: true },
     amenities: [{ type: String }],
     images: [{ type: String }],
+    image: { type: String, default: '' },
     rules: [{ type: String }],
   },
   { timestamps: true }

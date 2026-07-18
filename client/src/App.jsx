@@ -3,6 +3,9 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Reservas from './pages/Reservas';
+import Galeria from './pages/Galeria';
+import Mapa from './pages/Mapa';
+import Contacto from './pages/Contacto';
 
 function App() {
   return (
@@ -12,6 +15,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/reservas" element={<Reservas />} />
+          <Route path="/galeria" element={<Galeria />} />
+          <Route path="/mapa" element={<Mapa />} />
+          <Route path="/contacto" element={<Contacto />} />
         </Routes>
       </main>
       <Footer />
