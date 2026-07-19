@@ -14,6 +14,7 @@ const reservationSchema = new mongoose.Schema(
       enum: ['pending', 'confirmed', 'cancelled'],
       default: 'pending',
     },
+    manageToken: { type: String, unique: true, sparse: true },
   },
   { timestamps: true }
 );

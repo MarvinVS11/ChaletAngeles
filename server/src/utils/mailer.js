@@ -27,6 +27,32 @@ function hasSmtpConfig() {
   return Boolean(process.env.SMTP_USER && process.env.SMTP_PASS);
 }
 
+function buildManageLink(reservation) {
+  const base = process.env.CLIENT_URL;
+  if (!base || !reservation.manageToken) {
+    return null;
+  }
+  return `${base.replace(/\/$/, '')}/mi-reserva/${reservation.manageToken}`;
+}
+
+function manageLinkBlock(reservation) {
+  const link = buildManageLink(reservation);
+  if (!link) {
+    return { text: '', html: '' };
+  }
+
+  return {
+    text: `\n\nSi necesitás modificar o cancelar tu reserva, entrá acá: ${link}\n(Disponible hasta 48 horas antes del check-in.)`,
+    html: `
+      <p>
+        Si necesitás modificar o cancelar tu reserva, hacé click acá:
+        <a href="${link}">${link}</a>
+      </p>
+      <p style="font-size: 13px; color: #666;">(Disponible hasta 48 horas antes del check-in.)</p>
+    `,
+  };
+}
+
 async function sendReservationNotification(reservation) {
   if (!hasSmtpConfig() || !process.env.NOTIFICATION_EMAIL) {
     console.warn('Notificación de reserva omitida: faltan variables de entorno SMTP_USER/SMTP_PASS/NOTIFICATION_EMAIL');
@@ -60,12 +86,13 @@ async function sendReservationConfirmation(reservation) {
   }
 
   const { name, email, checkIn, checkOut, guests } = reservation;
+  const link = manageLinkBlock(reservation);
 
   await getTransporter().sendMail({
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: email,
     subject: `Recibimos tu solicitud de reserva — Sueños de Ángeles`,
-    text: `Hola ${name},\n\n¡Gracias por tu interés en Sueños de Ángeles! Recibimos tu solicitud de reserva con estos datos:\n\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\n\nEs una solicitud pendiente de confirmación: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.\n\n¡Gracias!\nSueños de Ángeles`,
+    text: `Hola ${name},\n\n¡Gracias por tu interés en Sueños de Ángeles! Recibimos tu solicitud de reserva con estos datos:\n\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\n\nEs una solicitud pendiente de confirmación: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
     html: `
       <h2>¡Gracias por tu solicitud, ${name}!</h2>
       <p>Recibimos tu solicitud de reserva en <strong>Sueños de Ángeles</strong> con estos datos:</p>
@@ -73,6 +100,7 @@ async function sendReservationConfirmation(reservation) {
       <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
       <p>Es una solicitud <strong>pendiente de confirmación</strong>: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.</p>
+      ${link.html}
       <p>¡Gracias por elegirnos!</p>
     `,
   });
@@ -106,18 +134,49 @@ async function sendReservationStatusUpdate(reservation) {
     return;
   }
 
+  const link = status === 'cancelled' ? { text: '', html: '' } : manageLinkBlock(reservation);
+
   await getTransporter().sendMail({
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: email,
     subject: copy.subject,
-    text: `Hola ${name},\n\n${copy.intro.replace(/<\/?strong>/g, '')}\n\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\n\n¡Gracias!\nSueños de Ángeles`,
+    text: `Hola ${name},\n\n${copy.intro.replace(/<\/?strong>/g, '')}\n\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
     html: `
       <h2>Hola ${name},</h2>
       <p>${copy.intro}</p>
       <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
       <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
+      ${link.html}
       <p>¡Gracias por elegirnos!</p>
+    `,
+  });
+}
+
+async function sendReservationUpdatedByCustomer(reservation, cancelled = false) {
+  if (!hasSmtpConfig() || !process.env.NOTIFICATION_EMAIL) {
+    console.warn('Notificación de cambio del cliente omitida: faltan variables de entorno');
+    return;
+  }
+
+  const { name, email, phone, checkIn, checkOut, guests, message } = reservation;
+  const action = cancelled ? 'canceló' : 'modificó';
+
+  await getTransporter().sendMail({
+    from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
+    to: process.env.NOTIFICATION_EMAIL,
+    subject: `El cliente ${action} su reserva: ${name}`,
+    text: `El cliente ${name} (${email}) ${action} su reserva.\n\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}\n\n${cancelled ? 'Quedó cancelada.' : 'Quedó pendiente de reconfirmación.'}`,
+    html: `
+      <h2>El cliente ${action} su reserva</h2>
+      <p><strong>Nombre:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Teléfono:</strong> ${phone}</p>
+      <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
+      <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
+      <p><strong>Huéspedes:</strong> ${guests}</p>
+      <p><strong>Mensaje:</strong> ${message || '(sin mensaje)'}</p>
+      <p>${cancelled ? 'Quedó <strong>cancelada</strong>.' : 'Quedó <strong>pendiente de reconfirmación</strong>.'}</p>
     `,
   });
 }
@@ -126,4 +185,5 @@ module.exports = {
   sendReservationNotification,
   sendReservationConfirmation,
   sendReservationStatusUpdate,
+  sendReservationUpdatedByCustomer,
 };

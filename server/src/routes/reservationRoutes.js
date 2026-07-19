@@ -8,6 +8,9 @@ const {
   updateReservationStatus,
   updateReservation,
   deleteReservation,
+  getReservationByToken,
+  updateReservationByToken,
+  cancelReservationByToken,
 } = require('../controllers/reservationController');
 const requireAuth = require('../middleware/auth');
 
@@ -16,6 +19,13 @@ const router = express.Router();
 const reservationValidators = [
   body('name').trim().notEmpty().withMessage('El nombre es requerido'),
   body('email').isEmail().withMessage('Email inválido'),
+  body('phone').trim().notEmpty().withMessage('El teléfono es requerido'),
+  body('checkIn').isISO8601().withMessage('Fecha de entrada inválida'),
+  body('checkOut').isISO8601().withMessage('Fecha de salida inválida'),
+  body('guests').isInt({ min: 1 }).withMessage('La cantidad de huéspedes debe ser al menos 1'),
+];
+
+const manageValidators = [
   body('phone').trim().notEmpty().withMessage('El teléfono es requerido'),
   body('checkIn').isISO8601().withMessage('Fecha de entrada inválida'),
   body('checkOut').isISO8601().withMessage('Fecha de salida inválida'),
@@ -36,6 +46,10 @@ router.get('/', requireAuth, listReservations);
 router.post('/', reservationValidators, validate, createReservation);
 
 router.post('/admin', requireAuth, reservationValidators, validate, createReservationByAdmin);
+
+router.get('/manage/:token', getReservationByToken);
+router.put('/manage/:token', manageValidators, validate, updateReservationByToken);
+router.post('/manage/:token/cancel', cancelReservationByToken);
 
 router.patch('/:id/status', requireAuth, updateReservationStatus);
 router.put('/:id', requireAuth, reservationValidators, validate, updateReservation);

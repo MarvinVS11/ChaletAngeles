@@ -1,12 +1,42 @@
+const crypto = require('crypto');
 const Reservation = require('../models/Reservation');
 const {
   sendReservationNotification,
   sendReservationConfirmation,
   sendReservationStatusUpdate,
+  sendReservationUpdatedByCustomer,
 } = require('../utils/mailer');
+
+const EDIT_CUTOFF_HOURS = 48;
 
 function datesOverlap(startA, endA, startB, endB) {
   return startA < endB && startB < endA;
+}
+
+function generateManageToken() {
+  return crypto.randomBytes(24).toString('hex');
+}
+
+function hoursUntil(date) {
+  return (new Date(date).getTime() - Date.now()) / (1000 * 60 * 60);
+}
+
+function isSelfManageEditable(reservation) {
+  return reservation.status !== 'cancelled' && hoursUntil(reservation.checkIn) > EDIT_CUTOFF_HOURS;
+}
+
+function toManageView(reservation) {
+  return {
+    name: reservation.name,
+    email: reservation.email,
+    phone: reservation.phone,
+    checkIn: reservation.checkIn,
+    checkOut: reservation.checkOut,
+    guests: reservation.guests,
+    message: reservation.message,
+    status: reservation.status,
+    editable: isSelfManageEditable(reservation),
+  };
 }
 
 async function checkAvailability(req, res) {
@@ -59,6 +89,7 @@ async function createReservation(req, res) {
     checkOut: requestedOut,
     guests,
     message,
+    manageToken: generateManageToken(),
   });
 
   try {
@@ -109,6 +140,7 @@ async function createReservationByAdmin(req, res) {
     guests,
     message,
     status: finalStatus,
+    manageToken: generateManageToken(),
   });
 
   try {
@@ -207,6 +239,110 @@ async function updateReservation(req, res) {
   res.json(reservation);
 }
 
+async function getReservationByToken(req, res) {
+  const reservation = await Reservation.findOne({ manageToken: req.params.token });
+
+  if (!reservation) {
+    return res.status(404).json({ message: 'No encontramos esa reserva' });
+  }
+
+  res.json(toManageView(reservation));
+}
+
+async function updateReservationByToken(req, res) {
+  const reservation = await Reservation.findOne({ manageToken: req.params.token });
+
+  if (!reservation) {
+    return res.status(404).json({ message: 'No encontramos esa reserva' });
+  }
+
+  if (reservation.status === 'cancelled') {
+    return res.status(400).json({ message: 'Esta reserva ya está cancelada.' });
+  }
+
+  if (!isSelfManageEditable(reservation)) {
+    return res.status(403).json({
+      message: `Ya no se puede modificar esta reserva online: faltan menos de ${EDIT_CUTOFF_HOURS} horas para el check-in. Contactanos directamente para cualquier cambio.`,
+    });
+  }
+
+  const { phone, checkIn, checkOut, guests, message } = req.body;
+  const requestedIn = new Date(checkIn);
+  const requestedOut = new Date(checkOut);
+
+  if (!(requestedOut > requestedIn)) {
+    return res.status(400).json({ message: 'checkOut debe ser posterior a checkIn' });
+  }
+
+  const conflicting = await Reservation.findOne({
+    _id: { $ne: reservation._id },
+    status: { $ne: 'cancelled' },
+    checkIn: { $lt: requestedOut },
+    checkOut: { $gt: requestedIn },
+  });
+
+  if (conflicting) {
+    return res.status(409).json({ message: 'Las fechas seleccionadas ya no están disponibles' });
+  }
+
+  reservation.phone = phone;
+  reservation.checkIn = requestedIn;
+  reservation.checkOut = requestedOut;
+  reservation.guests = guests;
+  reservation.message = message;
+  reservation.status = 'pending';
+  await reservation.save();
+
+  try {
+    await sendReservationStatusUpdate(reservation);
+  } catch (err) {
+    console.error('No se pudo enviar el correo de confirmación del cambio:', err.message);
+  }
+
+  try {
+    await sendReservationUpdatedByCustomer(reservation);
+  } catch (err) {
+    console.error('No se pudo notificar al admin del cambio del cliente:', err.message);
+  }
+
+  res.json(toManageView(reservation));
+}
+
+async function cancelReservationByToken(req, res) {
+  const reservation = await Reservation.findOne({ manageToken: req.params.token });
+
+  if (!reservation) {
+    return res.status(404).json({ message: 'No encontramos esa reserva' });
+  }
+
+  if (reservation.status === 'cancelled') {
+    return res.status(400).json({ message: 'Esta reserva ya está cancelada.' });
+  }
+
+  if (!isSelfManageEditable(reservation)) {
+    return res.status(403).json({
+      message: `Ya no se puede cancelar esta reserva online: faltan menos de ${EDIT_CUTOFF_HOURS} horas para el check-in. Contactanos directamente.`,
+    });
+  }
+
+  reservation.status = 'cancelled';
+  await reservation.save();
+
+  try {
+    await sendReservationStatusUpdate(reservation);
+  } catch (err) {
+    console.error('No se pudo enviar el correo de cancelación:', err.message);
+  }
+
+  try {
+    await sendReservationUpdatedByCustomer(reservation, true);
+  } catch (err) {
+    console.error('No se pudo notificar al admin de la cancelación:', err.message);
+  }
+
+  res.json(toManageView(reservation));
+}
+
 async function deleteReservation(req, res) {
   const reservation = await Reservation.findByIdAndDelete(req.params.id);
 
@@ -225,4 +361,7 @@ module.exports = {
   updateReservationStatus,
   updateReservation,
   deleteReservation,
+  getReservationByToken,
+  updateReservationByToken,
+  cancelReservationByToken,
 };
