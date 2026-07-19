@@ -1,5 +1,5 @@
 const Reservation = require('../models/Reservation');
-const { sendReservationNotification } = require('../utils/mailer');
+const { sendReservationNotification, sendReservationConfirmation } = require('../utils/mailer');
 
 function datesOverlap(startA, endA, startB, endB) {
   return startA < endB && startB < endA;
@@ -61,6 +61,12 @@ async function createReservation(req, res) {
     await sendReservationNotification(reservation);
   } catch (err) {
     console.error('No se pudo enviar el correo de notificación de reserva:', err.message);
+  }
+
+  try {
+    await sendReservationConfirmation(reservation);
+  } catch (err) {
+    console.error('No se pudo enviar el correo de confirmación al cliente:', err.message);
   }
 
   res.status(201).json(reservation);

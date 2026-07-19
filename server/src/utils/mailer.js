@@ -23,8 +23,12 @@ function formatDate(value) {
   });
 }
 
+function hasSmtpConfig() {
+  return Boolean(process.env.SMTP_USER && process.env.SMTP_PASS);
+}
+
 async function sendReservationNotification(reservation) {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !process.env.NOTIFICATION_EMAIL) {
+  if (!hasSmtpConfig() || !process.env.NOTIFICATION_EMAIL) {
     console.warn('Notificación de reserva omitida: faltan variables de entorno SMTP_USER/SMTP_PASS/NOTIFICATION_EMAIL');
     return;
   }
@@ -49,4 +53,29 @@ async function sendReservationNotification(reservation) {
   });
 }
 
-module.exports = { sendReservationNotification };
+async function sendReservationConfirmation(reservation) {
+  if (!hasSmtpConfig()) {
+    console.warn('Confirmación de reserva omitida: faltan variables de entorno SMTP_USER/SMTP_PASS');
+    return;
+  }
+
+  const { name, email, checkIn, checkOut, guests } = reservation;
+
+  await getTransporter().sendMail({
+    from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: `Recibimos tu solicitud de reserva — Sueños de Ángeles`,
+    text: `Hola ${name},\n\n¡Gracias por tu interés en Sueños de Ángeles! Recibimos tu solicitud de reserva con estos datos:\n\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\n\nEs una solicitud pendiente de confirmación: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.\n\n¡Gracias!\nSueños de Ángeles`,
+    html: `
+      <h2>¡Gracias por tu solicitud, ${name}!</h2>
+      <p>Recibimos tu solicitud de reserva en <strong>Sueños de Ángeles</strong> con estos datos:</p>
+      <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
+      <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
+      <p><strong>Huéspedes:</strong> ${guests}</p>
+      <p>Es una solicitud <strong>pendiente de confirmación</strong>: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.</p>
+      <p>¡Gracias por elegirnos!</p>
+    `,
+  });
+}
+
+module.exports = { sendReservationNotification, sendReservationConfirmation };
