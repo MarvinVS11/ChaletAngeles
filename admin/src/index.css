@@ -367,6 +367,24 @@ main {
   color: var(--text);
 }
 
+.admin-table .btn-primary {
+  padding: 7px 14px;
+  font-size: 12px;
+}
+
+.admin-table .btn-primary:disabled {
+  background: var(--border);
+  color: var(--text);
+}
+
+.saved-hint {
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--success);
+  font-weight: 600;
+  font-size: 12px;
+}
+
 @media (max-width: 640px) {
   .form-row {
     flex-direction: column;

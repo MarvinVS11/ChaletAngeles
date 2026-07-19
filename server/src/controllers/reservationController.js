@@ -1,5 +1,9 @@
 const Reservation = require('../models/Reservation');
-const { sendReservationNotification, sendReservationConfirmation } = require('../utils/mailer');
+const {
+  sendReservationNotification,
+  sendReservationConfirmation,
+  sendReservationStatusUpdate,
+} = require('../utils/mailer');
 
 function datesOverlap(startA, endA, startB, endB) {
   return startA < endB && startB < endA;
@@ -92,6 +96,12 @@ async function updateReservationStatus(req, res) {
 
   if (!reservation) {
     return res.status(404).json({ message: 'Reserva no encontrada' });
+  }
+
+  try {
+    await sendReservationStatusUpdate(reservation);
+  } catch (err) {
+    console.error('No se pudo enviar el correo de cambio de estado:', err.message);
   }
 
   res.json(reservation);

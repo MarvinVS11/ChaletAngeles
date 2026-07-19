@@ -78,4 +78,52 @@ async function sendReservationConfirmation(reservation) {
   });
 }
 
-module.exports = { sendReservationNotification, sendReservationConfirmation };
+const STATUS_COPY = {
+  pending: {
+    subject: 'Tu reserva sigue pendiente de confirmación — Sueños de Ángeles',
+    intro: 'Tu solicitud de reserva sigue <strong>pendiente de confirmación</strong>. Pronto te contactaremos para coordinar los detalles.',
+  },
+  confirmed: {
+    subject: '¡Tu reserva fue confirmada! — Sueños de Ángeles',
+    intro: '¡Buenas noticias! Tu reserva quedó <strong>confirmada</strong>. Te esperamos.',
+  },
+  cancelled: {
+    subject: 'Tu reserva fue cancelada — Sueños de Ángeles',
+    intro: 'Te informamos que tu reserva fue <strong>cancelada</strong>. Si tenés dudas, escribinos y con gusto te ayudamos.',
+  },
+};
+
+async function sendReservationStatusUpdate(reservation) {
+  if (!hasSmtpConfig()) {
+    console.warn('Correo de estado de reserva omitido: faltan variables de entorno SMTP_USER/SMTP_PASS');
+    return;
+  }
+
+  const { name, email, checkIn, checkOut, guests, status } = reservation;
+  const copy = STATUS_COPY[status];
+
+  if (!copy) {
+    return;
+  }
+
+  await getTransporter().sendMail({
+    from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: copy.subject,
+    text: `Hola ${name},\n\n${copy.intro.replace(/<\/?strong>/g, '')}\n\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\n\n¡Gracias!\nSueños de Ángeles`,
+    html: `
+      <h2>Hola ${name},</h2>
+      <p>${copy.intro}</p>
+      <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
+      <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
+      <p><strong>Huéspedes:</strong> ${guests}</p>
+      <p>¡Gracias por elegirnos!</p>
+    `,
+  });
+}
+
+module.exports = {
+  sendReservationNotification,
+  sendReservationConfirmation,
+  sendReservationStatusUpdate,
+};
