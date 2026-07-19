@@ -541,13 +541,13 @@ main {
 }
 
 .page :not(.hero, .page-hero, .reservar-cta) .btn-secondary {
-  color: var(--brand);
-  border-color: var(--brand);
+  color: var(--text-h);
+  border-color: var(--text-h);
 }
 
 .page :not(.hero, .page-hero, .reservar-cta) .btn-secondary:hover {
-  background: var(--brand);
-  color: #ffffff;
+  background: var(--text-h);
+  color: var(--bg);
 }
 
 .btn-primary:disabled {
