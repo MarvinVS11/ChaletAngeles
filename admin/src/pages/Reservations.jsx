@@ -19,6 +19,7 @@ function Reservations() {
   const [error, setError] = useState('');
   const [savingId, setSavingId] = useState(null);
   const [savedId, setSavedId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     loadReservations();
@@ -56,6 +57,23 @@ function Reservations() {
     }
   }
 
+  async function handleDelete(id, name) {
+    if (!window.confirm(`¿Eliminar definitivamente la reserva de "${name}"? Esta acción no se puede deshacer.`)) {
+      return;
+    }
+
+    setError('');
+    setDeletingId(id);
+    try {
+      await api.delete(`/reservations/${id}`);
+      setReservations((prev) => prev.filter((r) => r._id !== id));
+    } catch {
+      setError('No se pudo eliminar la reserva.');
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   if (loading) return <p className="status-message">Cargando...</p>;
 
   return (
@@ -87,6 +105,7 @@ function Reservations() {
                 <th>Huéspedes</th>
                 <th>Mensaje</th>
                 <th>Estado</th>
+                <th></th>
                 <th></th>
               </tr>
             </thead>
@@ -128,6 +147,21 @@ function Reservations() {
                         {savingId === r._id ? 'Guardando...' : 'Guardar'}
                       </button>
                       {savedId === r._id && <span className="saved-hint">✓ Notificado</span>}
+                    </td>
+                    <td>
+                      <div className="row-actions">
+                        <Link to={`/reservas/${r._id}/editar`} className="link-btn">
+                          Editar
+                        </Link>
+                        <button
+                          type="button"
+                          className="btn-danger"
+                          disabled={deletingId === r._id}
+                          onClick={() => handleDelete(r._id, r.name)}
+                        >
+                          {deletingId === r._id ? 'Eliminando...' : 'Eliminar'}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

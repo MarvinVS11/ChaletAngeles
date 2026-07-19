@@ -151,10 +151,78 @@ async function updateReservationStatus(req, res) {
   res.json(reservation);
 }
 
+async function updateReservation(req, res) {
+  const { name, email, phone, checkIn, checkOut, guests, message, status } = req.body;
+
+  const previous = await Reservation.findById(req.params.id);
+  if (!previous) {
+    return res.status(404).json({ message: 'Reserva no encontrada' });
+  }
+
+  const requestedIn = new Date(checkIn);
+  const requestedOut = new Date(checkOut);
+
+  if (!(requestedOut > requestedIn)) {
+    return res.status(400).json({ message: 'checkOut debe ser posterior a checkIn' });
+  }
+
+  const finalStatus = ['pending', 'confirmed', 'cancelled'].includes(status) ? status : previous.status;
+
+  if (finalStatus !== 'cancelled') {
+    const conflicting = await Reservation.findOne({
+      _id: { $ne: req.params.id },
+      status: { $ne: 'cancelled' },
+      checkIn: { $lt: requestedOut },
+      checkOut: { $gt: requestedIn },
+    });
+
+    if (conflicting) {
+      return res.status(409).json({ message: 'Las fechas seleccionadas ya no están disponibles' });
+    }
+  }
+
+  const reservation = await Reservation.findByIdAndUpdate(
+    req.params.id,
+    {
+      name,
+      email,
+      phone,
+      checkIn: requestedIn,
+      checkOut: requestedOut,
+      guests,
+      message,
+      status: finalStatus,
+    },
+    { returnDocument: 'after', runValidators: true }
+  );
+
+  if (previous.status !== finalStatus) {
+    try {
+      await sendReservationStatusUpdate(reservation);
+    } catch (err) {
+      console.error('No se pudo enviar el correo de cambio de estado:', err.message);
+    }
+  }
+
+  res.json(reservation);
+}
+
+async function deleteReservation(req, res) {
+  const reservation = await Reservation.findByIdAndDelete(req.params.id);
+
+  if (!reservation) {
+    return res.status(404).json({ message: 'Reserva no encontrada' });
+  }
+
+  res.status(204).end();
+}
+
 module.exports = {
   checkAvailability,
   createReservation,
   createReservationByAdmin,
   listReservations,
   updateReservationStatus,
+  updateReservation,
+  deleteReservation,
 };

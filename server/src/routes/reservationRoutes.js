@@ -6,6 +6,8 @@ const {
   createReservationByAdmin,
   listReservations,
   updateReservationStatus,
+  updateReservation,
+  deleteReservation,
 } = require('../controllers/reservationController');
 const requireAuth = require('../middleware/auth');
 
@@ -36,5 +38,7 @@ router.post('/', reservationValidators, validate, createReservation);
 router.post('/admin', requireAuth, reservationValidators, validate, createReservationByAdmin);
 
 router.patch('/:id/status', requireAuth, updateReservationStatus);
+router.put('/:id', requireAuth, reservationValidators, validate, updateReservation);
+router.delete('/:id', requireAuth, deleteReservation);
 
 module.exports = router;
