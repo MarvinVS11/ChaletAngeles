@@ -103,6 +103,18 @@ function Reservas() {
 
         {status.type && <p className={`status-message ${status.type}`}>{status.message}</p>}
       </form>
+
+      <p className="description" style={{ marginTop: 24 }}>
+        ¿Tenés problemas para completar la reserva desde este formulario?{' '}
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfNUsv-CBeK7bAdPdV6voZPBC3fZNnBbrRsK2bT8lXVGq5JCw/viewform"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Probá con este formulario alternativo
+        </a>
+        .
+      </p>
     </div>
   );
 }

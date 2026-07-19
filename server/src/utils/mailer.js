@@ -27,6 +27,9 @@ function hasSmtpConfig() {
   return Boolean(process.env.SMTP_USER && process.env.SMTP_PASS);
 }
 
+const RESERVATION_FORM_FALLBACK_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSfNUsv-CBeK7bAdPdV6voZPBC3fZNnBbrRsK2bT8lXVGq5JCw/viewform';
+
 function buildManageLink(reservation) {
   const base = process.env.CLIENT_URL;
   if (!base || !reservation.manageToken) {
@@ -42,13 +45,17 @@ function manageLinkBlock(reservation) {
   }
 
   return {
-    text: `\n\nSi necesitás modificar o cancelar tu reserva, entrá acá: modificar/cancelar Reservación\n${link}\n(Disponible hasta 48 horas antes del check-in.)`,
+    text: `\n\nSi necesitás modificar o cancelar tu reserva, entrá acá: modificar/cancelar Reservación\n${link}\n(Disponible hasta 48 horas antes del check-in.)\n\nSi el enlace anterior no funciona, dirigite a este: ${RESERVATION_FORM_FALLBACK_URL}`,
     html: `
       <p>
         Si necesitás modificar o cancelar tu reserva, entrá acá:
         <a href="${link}">modificar/cancelar Reservación</a>
       </p>
       <p style="font-size: 13px; color: #666;">(Disponible hasta 48 horas antes del check-in.)</p>
+      <p style="font-size: 13px; color: #666;">
+        Si el enlace anterior no funciona, dirigite a
+        <a href="${RESERVATION_FORM_FALLBACK_URL}">este</a>.
+      </p>
     `,
   };
 }
