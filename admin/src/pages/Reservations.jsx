@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api/client';
 
 const statusLabels = {
@@ -59,10 +60,17 @@ function Reservations() {
 
   return (
     <div className="page">
-      <h1>Reservas</h1>
-      <p className="description">
-        Al guardar un cambio de estado, se le envía un correo automático al cliente avisándole.
-      </p>
+      <div className="page-header">
+        <div>
+          <h1>Reservas</h1>
+          <p className="description">
+            Al guardar un cambio de estado, se le envía un correo automático al cliente avisándole.
+          </p>
+        </div>
+        <Link to="/reservas/nueva" className="btn-primary">
+          + Nueva reserva
+        </Link>
+      </div>
       {error && <p className="status-message error">{error}</p>}
 
       {reservations.length === 0 ? (

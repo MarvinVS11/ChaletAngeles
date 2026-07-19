@@ -76,6 +76,50 @@ async function createReservation(req, res) {
   res.status(201).json(reservation);
 }
 
+async function createReservationByAdmin(req, res) {
+  const { name, email, phone, checkIn, checkOut, guests, message, status } = req.body;
+
+  const requestedIn = new Date(checkIn);
+  const requestedOut = new Date(checkOut);
+
+  if (!(requestedOut > requestedIn)) {
+    return res.status(400).json({ message: 'checkOut debe ser posterior a checkIn' });
+  }
+
+  const finalStatus = ['pending', 'confirmed', 'cancelled'].includes(status) ? status : 'pending';
+
+  if (finalStatus !== 'cancelled') {
+    const conflicting = await Reservation.findOne({
+      status: { $ne: 'cancelled' },
+      checkIn: { $lt: requestedOut },
+      checkOut: { $gt: requestedIn },
+    });
+
+    if (conflicting) {
+      return res.status(409).json({ message: 'Las fechas seleccionadas ya no están disponibles' });
+    }
+  }
+
+  const reservation = await Reservation.create({
+    name,
+    email,
+    phone,
+    checkIn: requestedIn,
+    checkOut: requestedOut,
+    guests,
+    message,
+    status: finalStatus,
+  });
+
+  try {
+    await sendReservationStatusUpdate(reservation);
+  } catch (err) {
+    console.error('No se pudo enviar el correo al cliente de la reserva cargada por el admin:', err.message);
+  }
+
+  res.status(201).json(reservation);
+}
+
 async function listReservations(req, res) {
   const reservations = await Reservation.find().sort({ checkIn: 1 });
   res.json(reservations);
@@ -110,6 +154,7 @@ async function updateReservationStatus(req, res) {
 module.exports = {
   checkAvailability,
   createReservation,
+  createReservationByAdmin,
   listReservations,
   updateReservationStatus,
 };

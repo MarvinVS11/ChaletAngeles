@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import ChaletEditor from './pages/ChaletEditor';
 import SectionsEditor from './pages/SectionsEditor';
 import Reservations from './pages/Reservations';
+import NewReservation from './pages/NewReservation';
 
 function AdminLayout({ children }) {
   return (
@@ -47,6 +48,16 @@ function App() {
             <ProtectedRoute>
               <AdminLayout>
                 <Reservations />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reservas/nueva"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <NewReservation />
               </AdminLayout>
             </ProtectedRoute>
           }
