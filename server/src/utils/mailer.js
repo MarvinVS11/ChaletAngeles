@@ -45,7 +45,7 @@ function manageLinkBlock(reservation) {
   }
 
   return {
-    text: `\n\nSi necesitás modificar o cancelar tu reserva, entrá acá: modificar/cancelar Reservación\n${link}\n(Disponible hasta 48 horas antes del check-in.)\n\nSi el enlace anterior no funciona, dirigite a este: ${RESERVATION_FORM_FALLBACK_URL}`,
+    text: `\n\nSi necesitás modificar o cancelar tu reserva, entrá acá: modificar/cancelar Reservación\n${link}\n(Disponible hasta 48 horas antes del check-in.)\n\nSi el enlace anterior no funciona, haz click aquí: ${RESERVATION_FORM_FALLBACK_URL}`,
     html: `
       <p>
         Si necesitás modificar o cancelar tu reserva, entrá acá:
@@ -53,8 +53,8 @@ function manageLinkBlock(reservation) {
       </p>
       <p style="font-size: 13px; color: #666;">(Disponible hasta 48 horas antes del check-in.)</p>
       <p style="font-size: 13px; color: #666;">
-        Si el enlace anterior no funciona, dirigite a
-        <a href="${RESERVATION_FORM_FALLBACK_URL}">este</a>.
+        Si el enlace anterior no funciona,
+        <a href="${RESERVATION_FORM_FALLBACK_URL}">haz click aquí</a>.
       </p>
     `,
   };
