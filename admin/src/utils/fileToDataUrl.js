@@ -1,6 +1,12 @@
 const MAX_SOURCE_BYTES = 20 * 1024 * 1024;
-const MAX_DIMENSION = 1280;
-const JPEG_QUALITY = 0.72;
+const MAX_DIMENSION = 900;
+const JPEG_QUALITY = 0.6;
+
+export const MAX_PAYLOAD_BYTES = 3.8 * 1024 * 1024;
+
+export function estimatePayloadSize(value) {
+  return new Blob([JSON.stringify(value)]).size;
+}
 
 function readAsDataUrl(file) {
   return new Promise((resolve, reject) => {

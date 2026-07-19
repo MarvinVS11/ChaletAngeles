@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
-import { fileToDataUrl } from '../utils/fileToDataUrl';
+import { fileToDataUrl, estimatePayloadSize, MAX_PAYLOAD_BYTES } from '../utils/fileToDataUrl';
 
 const emptyForm = {
   title: '',
@@ -58,19 +58,31 @@ function ChaletEditor() {
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus({ type: null, message: '' });
+
+    const payload = {
+      title: form.title,
+      description: form.description,
+      location: form.location,
+      pricePerNight: Number(form.pricePerNight),
+      maxGuests: Number(form.maxGuests),
+      amenities: form.amenities.split('\n').map((s) => s.trim()).filter(Boolean),
+      rules: form.rules.split('\n').map((s) => s.trim()).filter(Boolean),
+      image: form.image,
+    };
+
+    const size = estimatePayloadSize(payload);
+    if (size > MAX_PAYLOAD_BYTES) {
+      setStatus({
+        type: 'error',
+        message: `La imagen pesa demasiado (${(size / (1024 * 1024)).toFixed(1)}MB). Probá con otra foto.`,
+      });
+      return;
+    }
+
     setSaving(true);
 
     try {
-      await api.put('/chalet', {
-        title: form.title,
-        description: form.description,
-        location: form.location,
-        pricePerNight: Number(form.pricePerNight),
-        maxGuests: Number(form.maxGuests),
-        amenities: form.amenities.split('\n').map((s) => s.trim()).filter(Boolean),
-        rules: form.rules.split('\n').map((s) => s.trim()).filter(Boolean),
-        image: form.image,
-      });
+      await api.put('/chalet', payload);
       setStatus({ type: 'success', message: 'Información actualizada correctamente.' });
     } catch (err) {
       setStatus({

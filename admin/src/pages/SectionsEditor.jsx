@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
 import CardListField from '../components/CardListField';
-import { fileToDataUrl } from '../utils/fileToDataUrl';
+import { fileToDataUrl, estimatePayloadSize, MAX_PAYLOAD_BYTES } from '../utils/fileToDataUrl';
 
 const emptyForm = {
   activities: [],
@@ -48,19 +48,31 @@ function SectionsEditor() {
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus({ type: null, message: '' });
+
+    const payload = {
+      activities: form.activities,
+      zoneOptions: form.zoneOptions,
+      gastronomyIntro: form.gastronomyIntro,
+      gastronomyItems: form.gastronomyItems
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean),
+      gastronomyImage: form.gastronomyImage,
+    };
+
+    const size = estimatePayloadSize(payload);
+    if (size > MAX_PAYLOAD_BYTES) {
+      setStatus({
+        type: 'error',
+        message: `El conjunto de imágenes pesa ${(size / (1024 * 1024)).toFixed(1)}MB, supera el máximo permitido (${(MAX_PAYLOAD_BYTES / (1024 * 1024)).toFixed(1)}MB). Quitá o reemplazá alguna foto e intentá de nuevo.`,
+      });
+      return;
+    }
+
     setSaving(true);
 
     try {
-      await api.put('/site-content', {
-        activities: form.activities,
-        zoneOptions: form.zoneOptions,
-        gastronomyIntro: form.gastronomyIntro,
-        gastronomyItems: form.gastronomyItems
-          .split('\n')
-          .map((s) => s.trim())
-          .filter(Boolean),
-        gastronomyImage: form.gastronomyImage,
-      });
+      await api.put('/site-content', payload);
       setStatus({ type: 'success', message: 'Secciones actualizadas correctamente.' });
     } catch (err) {
       setStatus({
