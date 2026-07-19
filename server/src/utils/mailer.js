@@ -42,11 +42,11 @@ function manageLinkBlock(reservation) {
   }
 
   return {
-    text: `\n\nSi necesitás modificar o cancelar tu reserva, entrá acá: ${link}\n(Disponible hasta 48 horas antes del check-in.)`,
+    text: `\n\nSi necesitás modificar o cancelar tu reserva, entrá acá: modificar/cancelar Reservación\n${link}\n(Disponible hasta 48 horas antes del check-in.)`,
     html: `
       <p>
-        Si necesitás modificar o cancelar tu reserva, hacé click acá:
-        <a href="${link}">${link}</a>
+        Si necesitás modificar o cancelar tu reserva, entrá acá:
+        <a href="${link}">modificar/cancelar Reservación</a>
       </p>
       <p style="font-size: 13px; color: #666;">(Disponible hasta 48 horas antes del check-in.)</p>
     `,
