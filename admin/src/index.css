@@ -76,7 +76,7 @@ h1 {
 main {
   flex: 1;
   width: 100%;
-  max-width: 960px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 28px 20px 48px;
 }
@@ -89,7 +89,7 @@ main {
 }
 
 .admin-nav-inner {
-  max-width: 960px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 14px 20px;
   display: flex;
@@ -417,7 +417,23 @@ main {
   padding: 12px 14px;
   text-align: left;
   border-bottom: 1px solid var(--border);
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.admin-table th:nth-child(3),
+.admin-table td:nth-child(3),
+.admin-table th:nth-child(4),
+.admin-table td:nth-child(4),
+.admin-table th:nth-child(5),
+.admin-table td:nth-child(5),
+.admin-table th:nth-child(7),
+.admin-table td:nth-child(7) {
   white-space: nowrap;
+}
+
+.admin-table td:nth-child(6) {
+  max-width: 260px;
 }
 
 .admin-table th {
