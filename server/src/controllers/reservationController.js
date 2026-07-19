@@ -290,7 +290,7 @@ async function updateReservationByToken(req, res) {
   reservation.checkOut = requestedOut;
   reservation.guests = guests;
   reservation.message = message;
-  reservation.status = 'pending';
+  reservation.status = 'confirmed';
   await reservation.save();
 
   try {

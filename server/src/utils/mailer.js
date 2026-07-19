@@ -139,7 +139,7 @@ async function sendReservationUpdatedByCustomer(reservation, cancelled = false) 
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: process.env.NOTIFICATION_EMAIL,
     subject: `El cliente ${action} su reserva: ${name}`,
-    text: `El cliente ${name} (${email}) ${action} su reserva.\n\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}\n\n${cancelled ? 'Quedó cancelada.' : 'Quedó pendiente de reconfirmación.'}`,
+    text: `El cliente ${name} (${email}) ${action} su reserva.\n\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}\n\n${cancelled ? 'Quedó cancelada.' : 'Quedó confirmada automáticamente con los nuevos datos.'}`,
     html: `
       <h2>El cliente ${action} su reserva</h2>
       <p><strong>Nombre:</strong> ${name}</p>
@@ -149,7 +149,7 @@ async function sendReservationUpdatedByCustomer(reservation, cancelled = false) 
       <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
       <p><strong>Mensaje:</strong> ${message || '(sin mensaje)'}</p>
-      <p>${cancelled ? 'Quedó <strong>cancelada</strong>.' : 'Quedó <strong>pendiente de reconfirmación</strong>.'}</p>
+      <p>${cancelled ? 'Quedó <strong>cancelada</strong>.' : 'Quedó <strong>confirmada automáticamente</strong> con los nuevos datos.'}</p>
     `,
   });
 }
