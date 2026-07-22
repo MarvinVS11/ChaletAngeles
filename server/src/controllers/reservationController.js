@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const Reservation = require('../models/Reservation');
 const {
   sendReservationNotification,
+  sendReservationConfirmation,
   sendReservationStatusUpdate,
   sendReservationUpdatedByCustomer,
 } = require('../utils/mailer');
@@ -88,7 +89,6 @@ async function createReservation(req, res) {
     checkOut: requestedOut,
     guests,
     message,
-    status: 'confirmed',
     manageToken: generateManageToken(),
   });
 
@@ -99,7 +99,7 @@ async function createReservation(req, res) {
   }
 
   try {
-    await sendReservationStatusUpdate(reservation);
+    await sendReservationConfirmation(reservation);
   } catch (err) {
     console.error('No se pudo enviar el correo de confirmación al cliente:', err.message);
   }
@@ -290,7 +290,7 @@ async function updateReservationByToken(req, res) {
   reservation.checkOut = requestedOut;
   reservation.guests = guests;
   reservation.message = message;
-  reservation.status = 'confirmed';
+  reservation.status = 'pending';
   await reservation.save();
 
   try {

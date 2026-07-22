@@ -71,10 +71,10 @@ async function sendReservationNotification(reservation) {
   await getTransporter().sendMail({
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: process.env.NOTIFICATION_EMAIL,
-    subject: `Nueva reserva confirmada: ${name} (${formatDate(checkIn)} - ${formatDate(checkOut)})`,
-    text: `Nueva reserva confirmada automáticamente\n\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}`,
+    subject: `Nueva reserva: ${name} (${formatDate(checkIn)} - ${formatDate(checkOut)})`,
+    text: `Nueva solicitud de reserva\n\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}`,
     html: `
-      <h2>Nueva reserva confirmada automáticamente</h2>
+      <h2>Nueva solicitud de reserva</h2>
       <p><strong>Nombre:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Teléfono:</strong> ${phone}</p>
@@ -82,6 +82,33 @@ async function sendReservationNotification(reservation) {
       <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
       <p><strong>Mensaje:</strong> ${message || '(sin mensaje)'}</p>
+    `,
+  });
+}
+
+async function sendReservationConfirmation(reservation) {
+  if (!hasSmtpConfig()) {
+    console.warn('Confirmación de reserva omitida: faltan variables de entorno SMTP_USER/SMTP_PASS');
+    return;
+  }
+
+  const { name, email, checkIn, checkOut, guests } = reservation;
+  const link = manageLinkBlock(reservation);
+
+  await getTransporter().sendMail({
+    from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: `Recibimos tu solicitud de reserva — Sueños de Ángeles`,
+    text: `Hola ${name},\n\n¡Gracias por tu interés en Sueños de Ángeles! Recibimos tu solicitud de reserva con estos datos:\n\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\n\nEs una solicitud pendiente de confirmación: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
+    html: `
+      <h2>¡Gracias por tu solicitud, ${name}!</h2>
+      <p>Recibimos tu solicitud de reserva en <strong>Sueños de Ángeles</strong> con estos datos:</p>
+      <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
+      <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
+      <p><strong>Huéspedes:</strong> ${guests}</p>
+      <p>Es una solicitud <strong>pendiente de confirmación</strong>: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.</p>
+      ${link.html}
+      <p>¡Gracias por elegirnos!</p>
     `,
   });
 }
@@ -146,7 +173,7 @@ async function sendReservationUpdatedByCustomer(reservation, cancelled = false) 
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: process.env.NOTIFICATION_EMAIL,
     subject: `El cliente ${action} su reserva: ${name}`,
-    text: `El cliente ${name} (${email}) ${action} su reserva.\n\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}\n\n${cancelled ? 'Quedó cancelada.' : 'Quedó confirmada automáticamente con los nuevos datos.'}`,
+    text: `El cliente ${name} (${email}) ${action} su reserva.\n\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}\n\n${cancelled ? 'Quedó cancelada.' : 'Quedó pendiente de reconfirmación.'}`,
     html: `
       <h2>El cliente ${action} su reserva</h2>
       <p><strong>Nombre:</strong> ${name}</p>
@@ -156,13 +183,14 @@ async function sendReservationUpdatedByCustomer(reservation, cancelled = false) 
       <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
       <p><strong>Mensaje:</strong> ${message || '(sin mensaje)'}</p>
-      <p>${cancelled ? 'Quedó <strong>cancelada</strong>.' : 'Quedó <strong>confirmada automáticamente</strong> con los nuevos datos.'}</p>
+      <p>${cancelled ? 'Quedó <strong>cancelada</strong>.' : 'Quedó <strong>pendiente de reconfirmación</strong>.'}</p>
     `,
   });
 }
 
 module.exports = {
   sendReservationNotification,
+  sendReservationConfirmation,
   sendReservationStatusUpdate,
   sendReservationUpdatedByCustomer,
 };
