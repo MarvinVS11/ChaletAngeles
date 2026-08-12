@@ -945,13 +945,14 @@ main {
 .mini-card-horizontal {
   display: flex;
   align-items: stretch;
+  min-height: 130px;
 }
 
 .mini-card-horizontal .mini-card-media {
   flex: 0 0 160px;
   width: 160px;
-  height: 160px;
   aspect-ratio: auto;
+  align-self: stretch;
 }
 
 .mini-card-horizontal .mini-card-body {
@@ -977,7 +978,6 @@ main {
   .mini-card-horizontal .mini-card-media {
     flex-basis: 120px;
     width: 120px;
-    height: 120px;
   }
 }
 
