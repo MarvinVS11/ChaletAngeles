@@ -78,9 +78,9 @@ function Home() {
           <h2>Actividades en Sueños de Ángeles</h2>
           <span className="rule" />
         </div>
-        <div className="mini-cards">
+        <div className="mini-cards mini-cards-horizontal">
           {activities.map((item) => (
-            <div className="mini-card" key={item.title}>
+            <div className="mini-card mini-card-horizontal" key={item.title}>
               <div className="mini-card-media" aria-hidden="true">
                 {item.image && <img src={item.image} alt={item.title} />}
               </div>

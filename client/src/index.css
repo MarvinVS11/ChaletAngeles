@@ -938,6 +938,43 @@ main {
   font-family: var(--sans);
 }
 
+.mini-cards-horizontal {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.mini-card-horizontal {
+  display: flex;
+  align-items: stretch;
+}
+
+.mini-card-horizontal .mini-card-media {
+  flex: 0 0 110px;
+  aspect-ratio: auto;
+}
+
+.mini-card-horizontal .mini-card-body {
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mini-card-horizontal h3 {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.mini-card-horizontal p {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .mini-card-horizontal .mini-card-media {
+    flex-basis: 84px;
+  }
+}
+
 /* Reserve CTA band */
 
 .reservar-cta {
