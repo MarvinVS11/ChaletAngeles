@@ -74,6 +74,13 @@ main {
   padding: 0 20px 64px;
 }
 
+#acerca-del-chalet,
+#actividades,
+#opciones-en-la-zona,
+#gastronomia {
+  scroll-margin-top: 112px;
+}
+
 /* Site header: liquid-glass yellow nav */
 
 .site-header {
@@ -154,7 +161,6 @@ main {
   gap: 4px;
   padding: 7px 8px;
   border-radius: 999px;
-  overflow: hidden;
   background: linear-gradient(120deg, rgba(180, 182, 178, 0.55), rgba(120, 122, 118, 0.35));
   backdrop-filter: blur(24px) saturate(120%) brightness(1.05);
   -webkit-backdrop-filter: blur(24px) saturate(120%) brightness(1.05);
@@ -170,6 +176,7 @@ main {
   position: absolute;
   inset: 0;
   z-index: 0;
+  border-radius: inherit;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 45%);
   pointer-events: none;
 }
@@ -213,6 +220,93 @@ main {
 
 .nav-pill a.nav-cta:hover {
   background: var(--yellow-soft);
+}
+
+/* "Inicio" dropdown */
+
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.nav-dropdown-arrow {
+  font-size: 9px;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px;
+  background: var(--brand);
+  border-radius: 12px;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35);
+  z-index: 50;
+}
+
+.nav-dropdown-menu button {
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: #ffffff;
+  opacity: 0.85;
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: normal;
+  text-transform: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.nav-dropdown-menu button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  opacity: 1;
+}
+
+.nav-dropdown-menu button.is-first {
+  font-weight: 700;
+  opacity: 1;
+}
+
+.nav-drawer-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 10px;
+  margin: -2px 0 6px;
+}
+
+.nav-drawer-sub button {
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: var(--yellow-contrast);
+  opacity: 0.8;
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: normal;
+  text-transform: none;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.nav-drawer-sub button:hover {
+  background: rgba(255, 255, 255, 0.35);
+  opacity: 1;
 }
 
 /* Mobile side drawer */

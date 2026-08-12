@@ -50,7 +50,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="section-block">
+      <section id="acerca-del-chalet" className="section-block">
         <div className="section-media" aria-hidden="true">
           {info?.image && <img src={info.image} alt="Acerca del chalet" />}
         </div>
@@ -72,7 +72,7 @@ function Home() {
         </div>
       </section>
 
-      <section>
+      <section id="actividades">
         <div className="section-heading">
           <p className="eyebrow">Vive la experiencia</p>
           <h2>Actividades en Sueños de Ángeles</h2>
@@ -93,7 +93,7 @@ function Home() {
         </div>
       </section>
 
-      <section style={{ marginTop: 88 }}>
+      <section id="opciones-en-la-zona" style={{ marginTop: 88 }}>
         <div className="section-heading">
           <p className="eyebrow">Los alrededores</p>
           <h2>Opciones en la zona</h2>
@@ -114,7 +114,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="section-block reverse" style={{ marginTop: 88 }}>
+      <section id="gastronomia" className="section-block reverse" style={{ marginTop: 88 }}>
         <div className="section-media" aria-hidden="true">
           {content?.gastronomyImage && <img src={content.gastronomyImage} alt="Gastronomía" />}
         </div>
