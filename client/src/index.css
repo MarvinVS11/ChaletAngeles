@@ -978,12 +978,14 @@ main {
   font-size: 16px;
   margin-bottom: 4px;
   color: #ffffff;
+  text-shadow: 0 1px 3px rgba(59, 47, 34, 0.9), 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
 .mini-card-horizontal p {
   font-size: 13px;
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(59, 47, 34, 0.9), 0 1px 6px rgba(0, 0, 0, 0.4);
 }
 
 /* Reserve CTA band */
