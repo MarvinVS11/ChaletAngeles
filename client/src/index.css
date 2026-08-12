@@ -88,7 +88,6 @@ main {
   top: 0;
   z-index: 30;
   height: 92px;
-  overflow: hidden;
   background: linear-gradient(135deg, var(--yellow-soft), var(--yellow) 55%, #e0b400 100%);
   box-shadow: 0 6px 24px rgba(20, 16, 4, 0.18);
 }
@@ -233,6 +232,24 @@ main {
   align-items: center;
   gap: 4px;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  font: inherit;
+  color: var(--yellow-contrast);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.nav-dropdown-trigger:hover,
+.nav-dropdown-trigger[aria-expanded='true'] {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .nav-dropdown-arrow {

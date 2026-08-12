@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 const links = [
@@ -17,6 +17,7 @@ const homeSections = [
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [homeMenuOpen, setHomeMenuOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
   function closeMenu() {
@@ -31,6 +32,19 @@ function Navbar() {
       document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
     }, 50);
   }
+
+  useEffect(() => {
+    if (!homeMenuOpen) return undefined;
+
+    function handleClickOutside(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setHomeMenuOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [homeMenuOpen]);
 
   return (
     <>
@@ -51,22 +65,15 @@ function Navbar() {
           </button>
 
           <nav className="nav-pill">
-            <div
-              className="nav-dropdown"
-              onMouseEnter={() => setHomeMenuOpen(true)}
-              onMouseLeave={() => setHomeMenuOpen(false)}
-            >
-              <NavLink
-                to="/"
-                end
+            <div className="nav-dropdown" ref={dropdownRef}>
+              <button
+                type="button"
                 className="nav-dropdown-trigger"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setHomeMenuOpen((prev) => !prev);
-                }}
+                aria-expanded={homeMenuOpen}
+                onClick={() => setHomeMenuOpen((prev) => !prev)}
               >
                 Inicio <span className="nav-dropdown-arrow">▾</span>
-              </NavLink>
+              </button>
 
               {homeMenuOpen && (
                 <div className="nav-dropdown-menu">
