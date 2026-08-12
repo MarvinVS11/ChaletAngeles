@@ -666,6 +666,7 @@ main {
 }
 
 .reservation-form input,
+.reservation-form select,
 .reservation-form textarea {
   font: inherit;
   padding: 12px 14px;
@@ -679,6 +680,7 @@ main {
 }
 
 .reservation-form input:focus,
+.reservation-form select:focus,
 .reservation-form textarea:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;

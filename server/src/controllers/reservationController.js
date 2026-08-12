@@ -62,7 +62,7 @@ async function checkAvailability(req, res) {
 }
 
 async function createReservation(req, res) {
-  const { name, email, phone, checkIn, checkOut, guests, message } = req.body;
+  const { name, email, phone, checkIn, checkOut, guests, origin, breakfast, message } = req.body;
 
   const requestedIn = new Date(checkIn);
   const requestedOut = new Date(checkOut);
@@ -88,6 +88,8 @@ async function createReservation(req, res) {
     checkIn: requestedIn,
     checkOut: requestedOut,
     guests,
+    origin,
+    breakfast: Boolean(breakfast),
     message,
     manageToken: generateManageToken(),
   });
@@ -108,7 +110,8 @@ async function createReservation(req, res) {
 }
 
 async function createReservationByAdmin(req, res) {
-  const { name, email, phone, checkIn, checkOut, guests, message, status } = req.body;
+  const { name, email, phone, checkIn, checkOut, guests, origin, breakfast, message, status } =
+    req.body;
 
   const requestedIn = new Date(checkIn);
   const requestedOut = new Date(checkOut);
@@ -138,6 +141,8 @@ async function createReservationByAdmin(req, res) {
     checkIn: requestedIn,
     checkOut: requestedOut,
     guests,
+    origin,
+    breakfast: Boolean(breakfast),
     message,
     status: finalStatus,
     manageToken: generateManageToken(),
@@ -184,7 +189,8 @@ async function updateReservationStatus(req, res) {
 }
 
 async function updateReservation(req, res) {
-  const { name, email, phone, checkIn, checkOut, guests, message, status } = req.body;
+  const { name, email, phone, checkIn, checkOut, guests, origin, breakfast, message, status } =
+    req.body;
 
   const previous = await Reservation.findById(req.params.id);
   if (!previous) {
@@ -222,6 +228,8 @@ async function updateReservation(req, res) {
       checkIn: requestedIn,
       checkOut: requestedOut,
       guests,
+      origin,
+      breakfast: Boolean(breakfast),
       message,
       status: finalStatus,
     },

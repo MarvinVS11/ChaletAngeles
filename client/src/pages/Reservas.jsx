@@ -8,6 +8,8 @@ const initialForm = {
   checkIn: '',
   checkOut: '',
   guests: 1,
+  origin: '',
+  breakfast: 'false',
   message: '',
 };
 
@@ -30,6 +32,7 @@ function Reservas() {
       await api.post('/reservations', {
         ...form,
         guests: Number(form.guests),
+        breakfast: form.breakfast === 'true',
       });
       setStatus({
         type: 'success',
@@ -90,6 +93,19 @@ function Reservas() {
             onChange={handleChange}
             required
           />
+        </label>
+
+        <label>
+          Lugar de procedencia (opcional)
+          <input type="text" name="origin" value={form.origin} onChange={handleChange} />
+        </label>
+
+        <label>
+          ¿Deseás servicio de desayuno? (cargo extra de ₡3.500 por persona)
+          <select name="breakfast" value={form.breakfast} onChange={handleChange}>
+            <option value="false">No</option>
+            <option value="true">Sí</option>
+          </select>
         </label>
 
         <label>

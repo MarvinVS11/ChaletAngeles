@@ -9,6 +9,8 @@ const initialForm = {
   checkIn: '',
   checkOut: '',
   guests: 1,
+  origin: '',
+  breakfast: 'false',
   message: '',
   status: 'confirmed',
 };
@@ -33,6 +35,7 @@ function NewReservation() {
       await api.post('/reservations/admin', {
         ...form,
         guests: Number(form.guests),
+        breakfast: form.breakfast === 'true',
       });
       setStatus({
         type: 'success',
@@ -116,6 +119,20 @@ function NewReservation() {
               <option value="pending">Pendiente</option>
               <option value="confirmed">Confirmada</option>
               <option value="cancelled">Cancelada</option>
+            </select>
+          </label>
+        </div>
+
+        <div className="form-row">
+          <label>
+            Lugar de procedencia (opcional)
+            <input type="text" name="origin" value={form.origin} onChange={handleChange} />
+          </label>
+          <label>
+            ¿Desea desayuno? (₡3.500 extra/persona)
+            <select name="breakfast" value={form.breakfast} onChange={handleChange}>
+              <option value="false">No</option>
+              <option value="true">Sí</option>
             </select>
           </label>
         </div>

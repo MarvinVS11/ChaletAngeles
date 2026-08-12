@@ -362,6 +362,7 @@ main {
 }
 
 .admin-form input,
+.admin-form select,
 .admin-form textarea {
   font: inherit;
   padding: 10px 12px;

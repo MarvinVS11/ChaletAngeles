@@ -66,13 +66,13 @@ async function sendReservationNotification(reservation) {
     return;
   }
 
-  const { name, email, phone, checkIn, checkOut, guests, message } = reservation;
+  const { name, email, phone, checkIn, checkOut, guests, origin, breakfast, message } = reservation;
 
   await getTransporter().sendMail({
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: process.env.NOTIFICATION_EMAIL,
     subject: `Nueva reserva: ${name} (${formatDate(checkIn)} - ${formatDate(checkOut)})`,
-    text: `Nueva solicitud de reserva\n\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}`,
+    text: `Nueva solicitud de reserva\n\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nLugar de procedencia: ${origin || '(no indicado)'}\nDesayuno: ${breakfast ? 'Sí' : 'No'}\nMensaje: ${message || '(sin mensaje)'}`,
     html: `
       <h2>Nueva solicitud de reserva</h2>
       <p><strong>Nombre:</strong> ${name}</p>
@@ -81,6 +81,8 @@ async function sendReservationNotification(reservation) {
       <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
       <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
+      <p><strong>Lugar de procedencia:</strong> ${origin || '(no indicado)'}</p>
+      <p><strong>Desayuno:</strong> ${breakfast ? 'Sí' : 'No'}</p>
       <p><strong>Mensaje:</strong> ${message || '(sin mensaje)'}</p>
     `,
   });

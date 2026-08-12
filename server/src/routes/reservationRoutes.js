@@ -23,6 +23,8 @@ const reservationValidators = [
   body('checkIn').isISO8601().withMessage('Fecha de entrada inválida'),
   body('checkOut').isISO8601().withMessage('Fecha de salida inválida'),
   body('guests').isInt({ min: 1 }).withMessage('La cantidad de huéspedes debe ser al menos 1'),
+  body('origin').optional({ checkFalsy: true }).trim(),
+  body('breakfast').optional().isBoolean().withMessage('Desayuno inválido'),
 ];
 
 const manageValidators = [
@@ -30,6 +32,8 @@ const manageValidators = [
   body('checkIn').isISO8601().withMessage('Fecha de entrada inválida'),
   body('checkOut').isISO8601().withMessage('Fecha de salida inválida'),
   body('guests').isInt({ min: 1 }).withMessage('La cantidad de huéspedes debe ser al menos 1'),
+  body('origin').optional({ checkFalsy: true }).trim(),
+  body('breakfast').optional().isBoolean().withMessage('Desayuno inválido'),
 ];
 
 function validate(req, res, next) {

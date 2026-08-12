@@ -8,6 +8,8 @@ const reservationSchema = new mongoose.Schema(
     checkIn: { type: Date, required: true },
     checkOut: { type: Date, required: true },
     guests: { type: Number, required: true, min: 1 },
+    origin: { type: String, trim: true },
+    breakfast: { type: Boolean, default: false },
     message: { type: String, trim: true },
     status: {
       type: String,

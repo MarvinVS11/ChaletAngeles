@@ -30,6 +30,8 @@ function EditReservation() {
           checkIn: toDateInput(reservation.checkIn),
           checkOut: toDateInput(reservation.checkOut),
           guests: reservation.guests,
+          origin: reservation.origin || '',
+          breakfast: reservation.breakfast ? 'true' : 'false',
           message: reservation.message || '',
           status: reservation.status,
         });
@@ -52,6 +54,7 @@ function EditReservation() {
       await api.put(`/reservations/${id}`, {
         ...form,
         guests: Number(form.guests),
+        breakfast: form.breakfast === 'true',
       });
       setStatus({ type: 'success', message: 'Reserva actualizada correctamente.' });
       setTimeout(() => navigate('/reservas'), 1000);
@@ -135,6 +138,20 @@ function EditReservation() {
               <option value="pending">Pendiente</option>
               <option value="confirmed">Confirmada</option>
               <option value="cancelled">Cancelada</option>
+            </select>
+          </label>
+        </div>
+
+        <div className="form-row">
+          <label>
+            Lugar de procedencia (opcional)
+            <input type="text" name="origin" value={form.origin} onChange={handleChange} />
+          </label>
+          <label>
+            ¿Desea desayuno? (₡3.500 extra/persona)
+            <select name="breakfast" value={form.breakfast} onChange={handleChange}>
+              <option value="false">No</option>
+              <option value="true">Sí</option>
             </select>
           </label>
         </div>
