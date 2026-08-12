@@ -7,7 +7,19 @@ const siteContentRoutes = require('./routes/siteContentRoutes');
 
 const app = express();
 
-const allowedOrigins = [process.env.CLIENT_URL, process.env.ADMIN_URL].filter(Boolean);
+function parseOrigins(value) {
+  return value
+    ? value
+        .split(',')
+        .map((origin) => origin.trim())
+        .filter(Boolean)
+    : [];
+}
+
+const allowedOrigins = [
+  ...parseOrigins(process.env.CLIENT_URL),
+  ...parseOrigins(process.env.ADMIN_URL),
+];
 
 app.use(
   cors({
