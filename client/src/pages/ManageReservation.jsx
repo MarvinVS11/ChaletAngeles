@@ -101,7 +101,7 @@ function ManageReservation() {
 
   if (notFound) {
     return (
-      <div className="page">
+      <div className="page manage-reservation">
         <div className="page-hero">
           <h1>Mi reserva</h1>
           <p>No encontramos ninguna reserva con ese enlace.</p>
@@ -111,7 +111,7 @@ function ManageReservation() {
   }
 
   return (
-    <div className="page">
+    <div className="page manage-reservation">
       <div className="page-hero">
         <h1>Mi reserva</h1>
         <p>Hola {reservation.name}, acá podés revisar el estado de tu reserva.</p>

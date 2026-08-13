@@ -651,12 +651,18 @@ main {
   border-color: #ffffff;
 }
 
-.page :not(.hero, .page-hero, .reservar-cta) .btn-secondary {
+/* Light-background contexts need dark text/border instead of the default
+   white styling (which is meant for dark sections like .hero, .page-hero
+   and .reservar-cta). Scoped by explicit container classes so it can never
+   accidentally match buttons that live inside those dark sections. */
+.mapa .btn-secondary,
+.manage-reservation .btn-secondary {
   color: var(--text-h);
   border-color: var(--text-h);
 }
 
-.page :not(.hero, .page-hero, .reservar-cta) .btn-secondary:hover {
+.mapa .btn-secondary:hover,
+.manage-reservation .btn-secondary:hover {
   background: var(--text-h);
   color: var(--bg);
 }
