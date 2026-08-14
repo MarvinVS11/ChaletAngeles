@@ -9,12 +9,37 @@ async function getChaletInfo(req, res) {
 }
 
 async function updateChaletInfo(req, res) {
-  const { title, description, location, pricePerNight, maxGuests, amenities, images, image, rules } =
-    req.body;
+  const {
+    title,
+    description,
+    location,
+    pricePerNight,
+    maxGuests,
+    amenities,
+    images,
+    image,
+    secondaryTitle,
+    secondaryText,
+    secondaryImage,
+    rules,
+  } = req.body;
 
   const info = await ChaletInfo.findOneAndUpdate(
     {},
-    { title, description, location, pricePerNight, maxGuests, amenities, images, image, rules },
+    {
+      title,
+      description,
+      location,
+      pricePerNight,
+      maxGuests,
+      amenities,
+      images,
+      image,
+      secondaryTitle,
+      secondaryText,
+      secondaryImage,
+      rules,
+    },
     { returnDocument: 'after', upsert: true, runValidators: true, setDefaultsOnInsert: true }
   );
 

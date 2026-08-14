@@ -37,15 +37,17 @@ function AcercaDelChalet() {
 
         <div className="yellow-block reverse">
           <div className="yellow-block-copy">
-            <h2>Un lugar para todos</h2>
+            <h2>{info?.secondaryTitle || 'Un lugar para todos'}</h2>
             <p>
-              Chalet Sueños de Ángeles es un lugar para familias, parejas, pequeños grupos de
-              amigos y para quienes quieren disfrutar de un lugar lleno de paz, tranquilidad y
-              naturaleza.
+              {info?.secondaryText ||
+                'Chalet Sueños de Ángeles es un lugar para familias, parejas, pequeños grupos de amigos y para quienes quieren disfrutar de un lugar lleno de paz, tranquilidad y naturaleza.'}
             </p>
           </div>
           <div className="yellow-block-media">
-            <img src={chaletPhoto} alt="Chalet Sueños de Ángeles de noche" />
+            <img
+              src={info?.secondaryImage || chaletPhoto}
+              alt={info?.secondaryTitle || 'Chalet Sueños de Ángeles de noche'}
+            />
           </div>
         </div>
 
