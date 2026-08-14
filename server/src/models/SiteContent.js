@@ -19,6 +19,7 @@ const galleryItemSchema = new mongoose.Schema(
 
 const siteContentSchema = new mongoose.Schema(
   {
+    aboutBlocks: [cardSchema],
     activities: [cardSchema],
     zoneOptions: [cardSchema],
     gastronomyIntro: { type: String, default: '' },

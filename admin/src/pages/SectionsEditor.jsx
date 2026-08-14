@@ -5,6 +5,7 @@ import GalleryField from '../components/GalleryField';
 import { fileToDataUrl, estimatePayloadSize, MAX_PAYLOAD_BYTES } from '../utils/fileToDataUrl';
 
 const emptyForm = {
+  aboutBlocks: [],
   activities: [],
   zoneOptions: [],
   gastronomyIntro: '',
@@ -15,6 +16,7 @@ const emptyForm = {
 
 function toForm(content) {
   return {
+    aboutBlocks: content.aboutBlocks || [],
     activities: content.activities || [],
     zoneOptions: content.zoneOptions || [],
     gastronomyIntro: content.gastronomyIntro || '',
@@ -53,6 +55,7 @@ function SectionsEditor() {
     setStatus({ type: null, message: '' });
 
     const payload = {
+      aboutBlocks: form.aboutBlocks,
       activities: form.activities,
       zoneOptions: form.zoneOptions,
       gastronomyIntro: form.gastronomyIntro,
@@ -94,6 +97,12 @@ function SectionsEditor() {
     <div className="page">
       <h1>Secciones del sitio</h1>
       <form onSubmit={handleSubmit} className="admin-form">
+        <CardListField
+          label="Acerca del Chalet — opciones adicionales"
+          items={form.aboutBlocks}
+          onChange={(aboutBlocks) => setForm((prev) => ({ ...prev, aboutBlocks }))}
+        />
+
         <CardListField
           label="Actividades en Sueños de Ángeles"
           items={form.activities}

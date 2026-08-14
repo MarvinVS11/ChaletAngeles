@@ -4,13 +4,21 @@ import chaletPhoto from '../assets/chalet.jpg';
 
 function AcercaDelChalet() {
   const [info, setInfo] = useState(null);
+  const [content, setContent] = useState(null);
 
   useEffect(() => {
     api
       .get('/chalet')
       .then((res) => setInfo(res.data))
       .catch(() => setInfo(null));
+
+    api
+      .get('/site-content')
+      .then((res) => setContent(res.data))
+      .catch(() => setContent(null));
   }, []);
+
+  const aboutBlocks = content?.aboutBlocks || [];
 
   return (
     <div className="page">
@@ -50,6 +58,21 @@ function AcercaDelChalet() {
             />
           </div>
         </div>
+
+        {aboutBlocks.map((item, index) => (
+          <div key={item.title}>
+            <div className="yellow-divider" />
+            <div className={`yellow-block ${index % 2 === 0 ? '' : 'reverse'}`}>
+              <div className="yellow-block-copy">
+                <h2>{item.title}</h2>
+                <p>{item.text}</p>
+              </div>
+              <div className="yellow-block-media">
+                {item.image ? <img src={item.image} alt={item.title} /> : null}
+              </div>
+            </div>
+          </div>
+        ))}
 
         {info?.amenities?.length ? (
           <>

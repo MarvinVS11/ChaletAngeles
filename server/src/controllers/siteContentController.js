@@ -1,6 +1,7 @@
 const SiteContent = require('../models/SiteContent');
 
 const emptyContent = {
+  aboutBlocks: [],
   activities: [],
   zoneOptions: [],
   gastronomyIntro: '',
@@ -15,12 +16,19 @@ async function getSiteContent(req, res) {
 }
 
 async function updateSiteContent(req, res) {
-  const { activities, zoneOptions, gastronomyIntro, gastronomyItems, gastronomyImage, gallery } =
-    req.body;
+  const {
+    aboutBlocks,
+    activities,
+    zoneOptions,
+    gastronomyIntro,
+    gastronomyItems,
+    gastronomyImage,
+    gallery,
+  } = req.body;
 
   const content = await SiteContent.findOneAndUpdate(
     {},
-    { activities, zoneOptions, gastronomyIntro, gastronomyItems, gastronomyImage, gallery },
+    { aboutBlocks, activities, zoneOptions, gastronomyIntro, gastronomyItems, gastronomyImage, gallery },
     { upsert: true, returnDocument: 'after', runValidators: true, setDefaultsOnInsert: true }
   );
 
