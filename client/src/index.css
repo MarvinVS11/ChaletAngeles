@@ -271,7 +271,7 @@ main {
   z-index: 50;
 }
 
-.nav-dropdown-menu button {
+.nav-dropdown-menu a {
   background: transparent;
   border: none;
   text-align: left;
@@ -281,18 +281,20 @@ main {
   font-size: 13px;
   letter-spacing: normal;
   text-transform: none;
+  text-decoration: none;
   padding: 10px 12px;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.15s ease, opacity 0.15s ease;
 }
 
-.nav-dropdown-menu button:hover {
+.nav-dropdown-menu a:hover,
+.nav-dropdown-menu a.active {
   background: rgba(255, 255, 255, 0.12);
   opacity: 1;
 }
 
-.nav-dropdown-menu button.is-first {
+.nav-dropdown-menu a.is-first {
   font-weight: 700;
   opacity: 1;
 }
@@ -305,7 +307,7 @@ main {
   margin: -2px 0 6px;
 }
 
-.nav-drawer-sub button {
+.nav-drawer .nav-drawer-sub a {
   background: transparent;
   border: none;
   text-align: left;
@@ -315,13 +317,16 @@ main {
   font-size: 13px;
   letter-spacing: normal;
   text-transform: none;
+  text-decoration: none;
   font-weight: 500;
   padding: 10px 12px;
   border-radius: 8px;
   cursor: pointer;
+  display: block;
 }
 
-.nav-drawer-sub button:hover {
+.nav-drawer .nav-drawer-sub a:hover,
+.nav-drawer .nav-drawer-sub a.active {
   background: rgba(255, 255, 255, 0.35);
   opacity: 1;
 }
@@ -560,6 +565,96 @@ main {
   max-width: 560px;
   margin: 0 auto;
   position: relative;
+}
+
+/* Yellow content blocks (Acerca del Chalet / Actividades / Opciones / Gastronomía) */
+
+.yellow-page {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background: linear-gradient(135deg, var(--yellow-soft), var(--yellow) 55%, #e0b400 100%);
+  padding: 8px 0 56px;
+}
+
+.yellow-block {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.yellow-block.reverse .yellow-block-media {
+  order: 2;
+}
+
+.yellow-block.yellow-block-single {
+  grid-template-columns: 1fr;
+  max-width: 760px;
+  text-align: center;
+}
+
+.yellow-block-copy h2 {
+  color: #ffffff;
+  text-align: center;
+  font-size: 26px;
+  margin: 0 0 18px;
+  text-shadow: 0 1px 3px rgba(20, 16, 4, 0.35);
+}
+
+.yellow-block-copy p {
+  color: var(--yellow-contrast);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.yellow-block-copy ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  color: var(--yellow-contrast);
+}
+
+.yellow-block-copy ul li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(20, 16, 4, 0.15);
+}
+
+.yellow-block-media {
+  aspect-ratio: 4 / 3;
+  background: rgba(20, 16, 4, 0.08);
+  overflow: hidden;
+}
+
+.yellow-block-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.yellow-divider {
+  max-width: 1140px;
+  margin: 0 auto;
+  height: 3px;
+  background: var(--yellow-contrast);
+}
+
+@media (max-width: 720px) {
+  .yellow-block,
+  .yellow-block.reverse {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 32px 20px;
+  }
+
+  .yellow-block.reverse .yellow-block-media {
+    order: 0;
+  }
 }
 
 .hero .eyebrow {
