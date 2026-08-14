@@ -9,6 +9,14 @@ const cardSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const galleryItemSchema = new mongoose.Schema(
+  {
+    image: { type: String, required: true },
+    caption: { type: String, trim: true, default: '' },
+  },
+  { _id: false }
+);
+
 const siteContentSchema = new mongoose.Schema(
   {
     activities: [cardSchema],
@@ -16,6 +24,7 @@ const siteContentSchema = new mongoose.Schema(
     gastronomyIntro: { type: String, default: '' },
     gastronomyItems: [{ type: String }],
     gastronomyImage: { type: String, default: '' },
+    gallery: [galleryItemSchema],
   },
   { timestamps: true }
 );

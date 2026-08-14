@@ -6,6 +6,7 @@ const emptyContent = {
   gastronomyIntro: '',
   gastronomyItems: [],
   gastronomyImage: '',
+  gallery: [],
 };
 
 async function getSiteContent(req, res) {
@@ -14,11 +15,12 @@ async function getSiteContent(req, res) {
 }
 
 async function updateSiteContent(req, res) {
-  const { activities, zoneOptions, gastronomyIntro, gastronomyItems, gastronomyImage } = req.body;
+  const { activities, zoneOptions, gastronomyIntro, gastronomyItems, gastronomyImage, gallery } =
+    req.body;
 
   const content = await SiteContent.findOneAndUpdate(
     {},
-    { activities, zoneOptions, gastronomyIntro, gastronomyItems, gastronomyImage },
+    { activities, zoneOptions, gastronomyIntro, gastronomyItems, gastronomyImage, gallery },
     { upsert: true, returnDocument: 'after', runValidators: true, setDefaultsOnInsert: true }
   );
 

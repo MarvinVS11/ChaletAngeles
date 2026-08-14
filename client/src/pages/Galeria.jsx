@@ -23,6 +23,10 @@ function Galeria() {
   const slides = useMemo(() => {
     const photos = [{ src: chaletPhoto, label: 'Chalet' }];
 
+    (content?.gallery || []).forEach((item, i) => {
+      if (item.image) photos.push({ src: item.image, label: item.caption || `Foto ${i + 1}` });
+    });
+
     if (info?.image) {
       photos.push({ src: info.image, label: 'Acerca del chalet' });
     }

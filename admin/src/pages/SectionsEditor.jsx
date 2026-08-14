@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
 import CardListField from '../components/CardListField';
+import GalleryField from '../components/GalleryField';
 import { fileToDataUrl, estimatePayloadSize, MAX_PAYLOAD_BYTES } from '../utils/fileToDataUrl';
 
 const emptyForm = {
@@ -9,6 +10,7 @@ const emptyForm = {
   gastronomyIntro: '',
   gastronomyItems: '',
   gastronomyImage: '',
+  gallery: [],
 };
 
 function toForm(content) {
@@ -18,6 +20,7 @@ function toForm(content) {
     gastronomyIntro: content.gastronomyIntro || '',
     gastronomyItems: (content.gastronomyItems || []).join('\n'),
     gastronomyImage: content.gastronomyImage || '',
+    gallery: content.gallery || [],
   };
 }
 
@@ -58,6 +61,7 @@ function SectionsEditor() {
         .map((s) => s.trim())
         .filter(Boolean),
       gastronomyImage: form.gastronomyImage,
+      gallery: form.gallery,
     };
 
     const size = estimatePayloadSize(payload);
@@ -100,6 +104,12 @@ function SectionsEditor() {
           label="Opciones en la zona"
           items={form.zoneOptions}
           onChange={(zoneOptions) => setForm((prev) => ({ ...prev, zoneOptions }))}
+        />
+
+        <GalleryField
+          label="Galería del chalet"
+          items={form.gallery}
+          onChange={(gallery) => setForm((prev) => ({ ...prev, gallery }))}
         />
 
         <fieldset>
