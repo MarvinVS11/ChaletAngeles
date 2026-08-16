@@ -5,6 +5,7 @@ import AdminNav from './components/AdminNav';
 import Login from './pages/Login';
 import ChaletEditor from './pages/ChaletEditor';
 import SectionsEditor from './pages/SectionsEditor';
+import GalleryEditor from './pages/GalleryEditor';
 import Reservations from './pages/Reservations';
 import NewReservation from './pages/NewReservation';
 import EditReservation from './pages/EditReservation';
@@ -39,6 +40,16 @@ function App() {
             <ProtectedRoute>
               <AdminLayout>
                 <SectionsEditor />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/galeria"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <GalleryEditor />
               </AdminLayout>
             </ProtectedRoute>
           }

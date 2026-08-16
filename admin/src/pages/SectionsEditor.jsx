@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
 import CardListField from '../components/CardListField';
-import GalleryField from '../components/GalleryField';
 import { fileToDataUrl, estimatePayloadSize, MAX_PAYLOAD_BYTES } from '../utils/fileToDataUrl';
 
 const emptyForm = {
@@ -11,7 +10,6 @@ const emptyForm = {
   gastronomyIntro: '',
   gastronomyItems: '',
   gastronomyImage: '',
-  gallery: [],
 };
 
 function toForm(content) {
@@ -22,12 +20,12 @@ function toForm(content) {
     gastronomyIntro: content.gastronomyIntro || '',
     gastronomyItems: (content.gastronomyItems || []).join('\n'),
     gastronomyImage: content.gastronomyImage || '',
-    gallery: content.gallery || [],
   };
 }
 
 function SectionsEditor() {
   const [form, setForm] = useState(emptyForm);
+  const [gallery, setGallery] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState({ type: null, message: '' });
@@ -35,7 +33,10 @@ function SectionsEditor() {
   useEffect(() => {
     api
       .get('/site-content')
-      .then((res) => setForm(toForm(res.data)))
+      .then((res) => {
+        setForm(toForm(res.data));
+        setGallery(res.data.gallery || []);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -64,7 +65,7 @@ function SectionsEditor() {
         .map((s) => s.trim())
         .filter(Boolean),
       gastronomyImage: form.gastronomyImage,
-      gallery: form.gallery,
+      gallery,
     };
 
     const size = estimatePayloadSize(payload);
@@ -96,6 +97,9 @@ function SectionsEditor() {
   return (
     <div className="page">
       <h1>Secciones del sitio</h1>
+      <p className="description">
+        La galería de fotos tiene su propia página independiente en el menú.
+      </p>
       <form onSubmit={handleSubmit} className="admin-form">
         <CardListField
           label="Acerca del Chalet — opciones adicionales"
@@ -113,12 +117,6 @@ function SectionsEditor() {
           label="Opciones en la zona"
           items={form.zoneOptions}
           onChange={(zoneOptions) => setForm((prev) => ({ ...prev, zoneOptions }))}
-        />
-
-        <GalleryField
-          label="Galería del chalet"
-          items={form.gallery}
-          onChange={(gallery) => setForm((prev) => ({ ...prev, gallery }))}
         />
 
         <fieldset>

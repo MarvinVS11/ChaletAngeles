@@ -4,16 +4,10 @@ import { galleryPlaceholders } from '../data/content';
 import chaletPhoto from '../assets/chalet.jpg';
 
 function Galeria() {
-  const [info, setInfo] = useState(null);
   const [content, setContent] = useState(null);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    api
-      .get('/chalet')
-      .then((res) => setInfo(res.data))
-      .catch(() => setInfo(null));
-
     api
       .get('/site-content')
       .then((res) => setContent(res.data))
@@ -21,32 +15,18 @@ function Galeria() {
   }, []);
 
   const slides = useMemo(() => {
-    const photos = [{ src: chaletPhoto, label: 'Chalet' }];
+    const gallery = content?.gallery || [];
 
-    (content?.gallery || []).forEach((item, i) => {
-      if (item.image) photos.push({ src: item.image, label: item.caption || `Foto ${i + 1}` });
-    });
-
-    if (info?.image) {
-      photos.push({ src: info.image, label: 'Acerca del chalet' });
+    if (gallery.length === 0) {
+      const placeholders = galleryPlaceholders.map((label) => ({ src: null, label }));
+      return [{ src: chaletPhoto, label: 'Chalet' }, ...placeholders];
     }
 
-    (content?.activities || []).forEach((item) => {
-      if (item.image) photos.push({ src: item.image, label: item.title });
-    });
-
-    (content?.zoneOptions || []).forEach((item) => {
-      if (item.image) photos.push({ src: item.image, label: item.title });
-    });
-
-    if (content?.gastronomyImage) {
-      photos.push({ src: content.gastronomyImage, label: 'Gastronomía' });
-    }
-
-    const placeholders = galleryPlaceholders.map((label) => ({ src: null, label }));
-
-    return [...photos, ...placeholders];
-  }, [info, content]);
+    return gallery.map((item, i) => ({
+      src: item.image,
+      label: item.caption || `Foto ${i + 1}`,
+    }));
+  }, [content]);
 
   const current = slides[index];
 
