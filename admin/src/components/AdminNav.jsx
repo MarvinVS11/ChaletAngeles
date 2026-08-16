@@ -19,6 +19,7 @@ function AdminNav() {
             Chalet
           </NavLink>
           <NavLink to="/secciones">Secciones</NavLink>
+          <NavLink to="/galeria">Galería</NavLink>
           <NavLink to="/reservas">Reservas</NavLink>
           <button type="button" className="admin-logout" onClick={handleLogout}>
             Cerrar sesión

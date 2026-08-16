@@ -10,6 +10,9 @@ const chaletInfoSchema = new mongoose.Schema(
     amenities: [{ type: String }],
     images: [{ type: String }],
     image: { type: String, default: '' },
+    secondaryTitle: { type: String, default: 'Un lugar para todos' },
+    secondaryText: { type: String, trim: true, default: '' },
+    secondaryImage: { type: String, default: '' },
     rules: [{ type: String }],
   },
   { timestamps: true }

@@ -4,6 +4,7 @@ import CardListField from '../components/CardListField';
 import { fileToDataUrl, estimatePayloadSize, MAX_PAYLOAD_BYTES } from '../utils/fileToDataUrl';
 
 const emptyForm = {
+  aboutBlocks: [],
   activities: [],
   zoneOptions: [],
   gastronomyIntro: '',
@@ -13,6 +14,7 @@ const emptyForm = {
 
 function toForm(content) {
   return {
+    aboutBlocks: content.aboutBlocks || [],
     activities: content.activities || [],
     zoneOptions: content.zoneOptions || [],
     gastronomyIntro: content.gastronomyIntro || '',
@@ -23,6 +25,7 @@ function toForm(content) {
 
 function SectionsEditor() {
   const [form, setForm] = useState(emptyForm);
+  const [gallery, setGallery] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState({ type: null, message: '' });
@@ -30,7 +33,10 @@ function SectionsEditor() {
   useEffect(() => {
     api
       .get('/site-content')
-      .then((res) => setForm(toForm(res.data)))
+      .then((res) => {
+        setForm(toForm(res.data));
+        setGallery(res.data.gallery || []);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -50,6 +56,7 @@ function SectionsEditor() {
     setStatus({ type: null, message: '' });
 
     const payload = {
+      aboutBlocks: form.aboutBlocks,
       activities: form.activities,
       zoneOptions: form.zoneOptions,
       gastronomyIntro: form.gastronomyIntro,
@@ -58,6 +65,7 @@ function SectionsEditor() {
         .map((s) => s.trim())
         .filter(Boolean),
       gastronomyImage: form.gastronomyImage,
+      gallery,
     };
 
     const size = estimatePayloadSize(payload);
@@ -89,7 +97,16 @@ function SectionsEditor() {
   return (
     <div className="page">
       <h1>Secciones del sitio</h1>
+      <p className="description">
+        La galería de fotos tiene su propia página independiente en el menú.
+      </p>
       <form onSubmit={handleSubmit} className="admin-form">
+        <CardListField
+          label="Acerca del Chalet — opciones adicionales"
+          items={form.aboutBlocks}
+          onChange={(aboutBlocks) => setForm((prev) => ({ ...prev, aboutBlocks }))}
+        />
+
         <CardListField
           label="Actividades en Sueños de Ángeles"
           items={form.activities}

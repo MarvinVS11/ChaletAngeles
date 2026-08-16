@@ -11,6 +11,9 @@ const emptyForm = {
   amenities: '',
   rules: '',
   image: '',
+  secondaryTitle: '',
+  secondaryText: '',
+  secondaryImage: '',
 };
 
 function toForm(info) {
@@ -23,6 +26,9 @@ function toForm(info) {
     amenities: (info.amenities || []).join('\n'),
     rules: (info.rules || []).join('\n'),
     image: info.image || '',
+    secondaryTitle: info.secondaryTitle || 'Un lugar para todos',
+    secondaryText: info.secondaryText || '',
+    secondaryImage: info.secondaryImage || '',
   };
 }
 
@@ -55,6 +61,16 @@ function ChaletEditor() {
     }
   }
 
+  async function handleSecondaryImage(file) {
+    if (!file) return;
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setForm((prev) => ({ ...prev, secondaryImage: dataUrl }));
+    } catch (err) {
+      window.alert(err.message);
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus({ type: null, message: '' });
@@ -68,6 +84,9 @@ function ChaletEditor() {
       amenities: form.amenities.split('\n').map((s) => s.trim()).filter(Boolean),
       rules: form.rules.split('\n').map((s) => s.trim()).filter(Boolean),
       image: form.image,
+      secondaryTitle: form.secondaryTitle,
+      secondaryText: form.secondaryText,
+      secondaryImage: form.secondaryImage,
     };
 
     const size = estimatePayloadSize(payload);
@@ -151,6 +170,42 @@ function ChaletEditor() {
           <input type="file" accept="image/*" onChange={(e) => handleImage(e.target.files[0])} />
         </label>
         {form.image && <img className="card-list-preview" src={form.image} alt="" />}
+
+        <fieldset>
+          <legend>Página "Acerca del Chalet" — segundo bloque</legend>
+
+          <label>
+            Título
+            <input
+              type="text"
+              name="secondaryTitle"
+              value={form.secondaryTitle}
+              onChange={handleChange}
+            />
+          </label>
+
+          <label>
+            Texto
+            <textarea
+              name="secondaryText"
+              value={form.secondaryText}
+              onChange={handleChange}
+              rows="4"
+            />
+          </label>
+
+          <label>
+            Imagen
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleSecondaryImage(e.target.files[0])}
+            />
+          </label>
+          {form.secondaryImage && (
+            <img className="card-list-preview" src={form.secondaryImage} alt="" />
+          )}
+        </fieldset>
 
         <label>
           Comodidades (una por línea)

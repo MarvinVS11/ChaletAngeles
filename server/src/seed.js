@@ -24,6 +24,10 @@ async function seed() {
     ],
     images: [],
     image: '',
+    secondaryTitle: 'Un lugar para todos',
+    secondaryText:
+      'Chalet Sueños de Ángeles es un lugar para familias, parejas, pequeños grupos de amigos y para quienes quieren disfrutar de un lugar lleno de paz, tranquilidad y naturaleza.',
+    secondaryImage: '',
     rules: [
       'No se permiten mascotas',
       'No fumar en el interior',

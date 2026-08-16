@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const links = [
   { to: '/galeria', label: 'Galería' },
@@ -8,29 +8,20 @@ const links = [
 ];
 
 const homeSections = [
-  { hash: 'acerca-del-chalet', label: 'Acerca del Chalet' },
-  { hash: 'actividades', label: 'Actividades en Sueños de Ángeles' },
-  { hash: 'opciones-en-la-zona', label: 'Opciones en la zona' },
-  { hash: 'gastronomia', label: 'Gastronomía' },
+  { to: '/acerca-del-chalet', label: 'Acerca del Chalet' },
+  { to: '/actividades', label: 'Actividades en Sueños de Ángeles' },
+  { to: '/opciones-en-la-zona', label: 'Opciones en la zona' },
+  { to: '/gastronomia', label: 'Gastronomía' },
 ];
 
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [homeMenuOpen, setHomeMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const navigate = useNavigate();
 
   function closeMenu() {
     setOpen(false);
     setHomeMenuOpen(false);
-  }
-
-  function goToSection(hash) {
-    closeMenu();
-    navigate(`/#${hash}`);
-    window.setTimeout(() => {
-      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
-    }, 50);
   }
 
   useEffect(() => {
@@ -78,14 +69,14 @@ function Navbar() {
               {homeMenuOpen && (
                 <div className="nav-dropdown-menu">
                   {homeSections.map((section, index) => (
-                    <button
-                      key={section.hash}
-                      type="button"
+                    <NavLink
+                      key={section.to}
+                      to={section.to}
                       className={index === 0 ? 'is-first' : ''}
-                      onClick={() => goToSection(section.hash)}
+                      onClick={closeMenu}
                     >
                       {section.label}
-                    </button>
+                    </NavLink>
                   ))}
                 </div>
               )}
@@ -124,9 +115,9 @@ function Navbar() {
         </NavLink>
         <div className="nav-drawer-sub">
           {homeSections.map((section) => (
-            <button key={section.hash} type="button" onClick={() => goToSection(section.hash)}>
+            <NavLink key={section.to} to={section.to} onClick={closeMenu}>
               {section.label}
-            </button>
+            </NavLink>
           ))}
         </div>
 

@@ -7,6 +7,10 @@ import Galeria from './pages/Galeria';
 import Mapa from './pages/Mapa';
 import Contacto from './pages/Contacto';
 import ManageReservation from './pages/ManageReservation';
+import AcercaDelChalet from './pages/AcercaDelChalet';
+import Actividades from './pages/Actividades';
+import OpcionesEnLaZona from './pages/OpcionesEnLaZona';
+import Gastronomia from './pages/Gastronomia';
 
 function App() {
   return (
@@ -20,6 +24,10 @@ function App() {
           <Route path="/mapa" element={<Mapa />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/mi-reserva/:token" element={<ManageReservation />} />
+          <Route path="/acerca-del-chalet" element={<AcercaDelChalet />} />
+          <Route path="/actividades" element={<Actividades />} />
+          <Route path="/opciones-en-la-zona" element={<OpcionesEnLaZona />} />
+          <Route path="/gastronomia" element={<Gastronomia />} />
         </Routes>
       </main>
       <Footer />
