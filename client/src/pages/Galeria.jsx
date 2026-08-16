@@ -56,12 +56,14 @@ function Galeria() {
         </button>
 
         <div className="gallery-slide-main">
-          {current.src ? (
-            <img src={current.src} alt={current.label} />
-          ) : (
-            <span>{current.label}</span>
-          )}
-          <span className="gallery-slide-caption">{current.label}</span>
+          <div className={`gallery-slide-frame ${current.src ? '' : 'is-placeholder'}`}>
+            {current.src ? (
+              <img src={current.src} alt={current.label} />
+            ) : (
+              <span>{current.label}</span>
+            )}
+            <span className="gallery-slide-caption">{current.label}</span>
+          </div>
         </div>
 
         <button
