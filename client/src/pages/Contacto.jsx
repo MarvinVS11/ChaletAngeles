@@ -19,7 +19,7 @@ function Contacto() {
         </a>
         <a className="contact-card" href={contact.instagramUrl} target="_blank" rel="noreferrer">
           <h2>Instagram</h2>
-          <p>@chaletsuenosdeangeles</p>
+          <p>@chaletangeles</p>
         </a>
         <a className="contact-card" href={contact.tiktokUrl} target="_blank" rel="noreferrer">
           <h2>TikTok</h2>

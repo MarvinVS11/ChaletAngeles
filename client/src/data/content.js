@@ -5,7 +5,7 @@ export const contact = {
   location: 'Los Ángeles, San Ramón de Alajuela, Costa Rica',
   mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Los+%C3%81ngeles+San+Ram%C3%B3n+Alajuela+Costa+Rica',
   wazeUrl: 'https://waze.com/ul?q=Los%20Angeles%20San%20Ramon%20Alajuela%20Costa%20Rica&navigate=yes',
-  instagramUrl: 'https://www.instagram.com/chaletsuenosdeangeles',
+  instagramUrl: 'https://www.instagram.com/chaletangeles',
   tiktokUrl: 'https://www.tiktok.com/@chaletangeles',
 };
 
