@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { contact } from '../data/content';
+import { openInstagramProfile } from '../utils/openInstagram';
 
 function Footer() {
   return (
@@ -12,7 +13,10 @@ function Footer() {
             naturaleza para familias, parejas y grupos de amigos.
           </p>
           <div className="footer-social">
-            <a href={contact.instagramUrl} target="_blank" rel="noreferrer">
+            <a
+              href={contact.instagramUrl}
+              onClick={(e) => openInstagramProfile(contact.instagramUsername, e)}
+            >
               Instagram
             </a>
             <a href={contact.tiktokUrl} target="_blank" rel="noreferrer">

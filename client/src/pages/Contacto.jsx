@@ -1,4 +1,5 @@
 import { contact } from '../data/content';
+import { openInstagramProfile } from '../utils/openInstagram';
 
 function Contacto() {
   return (
@@ -17,7 +18,11 @@ function Contacto() {
           <h2>Correo</h2>
           <p>{contact.email}</p>
         </a>
-        <a className="contact-card" href={contact.instagramUrl} target="_blank" rel="noreferrer">
+        <a
+          className="contact-card"
+          href={contact.instagramUrl}
+          onClick={(e) => openInstagramProfile(contact.instagramUsername, e)}
+        >
           <h2>Instagram</h2>
           <p>@chaletangeles</p>
         </a>
