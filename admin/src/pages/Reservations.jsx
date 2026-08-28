@@ -9,7 +9,7 @@ const statusLabels = {
 };
 
 function formatDate(value) {
-  return new Date(value).toLocaleDateString('es-CR');
+  return new Date(value).toLocaleDateString('es-CR', { timeZone: 'UTC' });
 }
 
 function Reservations() {
