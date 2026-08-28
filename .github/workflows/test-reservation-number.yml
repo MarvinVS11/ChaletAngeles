@@ -1,0 +1,26 @@
+name: test-reservation-number
+on: workflow_dispatch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crear reserva de prueba
+        run: |
+          echo "== POST /api/reservations =="
+          curl -s -X POST https://chalet-angeles-server-git-main-marvinvs.vercel.app/api/reservations \
+            -H "Content-Type: application/json" \
+            -d '{
+              "name": "Prueba Numero Reserva",
+              "email": "marvix91@gmail.com",
+              "phone": "00000000",
+              "checkIn": "2027-03-01",
+              "checkOut": "2027-03-02",
+              "guests": 1,
+              "origin": "Prueba tecnica",
+              "breakfast": false,
+              "message": "Reserva de prueba del sistema de numeros CA-YYYY-RRR. Puede cancelarse."
+            }' | tee response.json
+          echo ""
+          echo "== reservationNumber =="
+          grep -o '"reservationNumber":"[^"]*"' response.json || echo "SIN NUMERO EN LA RESPUESTA"
