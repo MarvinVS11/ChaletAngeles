@@ -1,6 +1,10 @@
 const crypto = require('crypto');
 const Reservation = require('../models/Reservation');
 const {
+  generateReservationNumber,
+  ensureReservationNumber,
+} = require('../utils/reservationNumber');
+const {
   sendReservationNotification,
   sendReservationConfirmation,
   sendReservationStatusUpdate,
@@ -27,6 +31,7 @@ function isSelfManageEditable(reservation) {
 
 function toManageView(reservation) {
   return {
+    reservationNumber: reservation.reservationNumber,
     name: reservation.name,
     email: reservation.email,
     phone: reservation.phone,
@@ -92,6 +97,7 @@ async function createReservation(req, res) {
     breakfast: Boolean(breakfast),
     message,
     manageToken: generateManageToken(),
+    reservationNumber: await generateReservationNumber(),
   });
 
   try {
@@ -146,6 +152,7 @@ async function createReservationByAdmin(req, res) {
     message,
     status: finalStatus,
     manageToken: generateManageToken(),
+    reservationNumber: await generateReservationNumber(),
   });
 
   try {
@@ -159,6 +166,13 @@ async function createReservationByAdmin(req, res) {
 
 async function listReservations(req, res) {
   const reservations = await Reservation.find().sort({ checkIn: 1 });
+  // Backfill perezoso: asigna numero a reservas creadas antes de esta funcion.
+  for (const reservation of reservations) {
+    if (!reservation.reservationNumber) {
+      // eslint-disable-next-line no-await-in-loop
+      await ensureReservationNumber(reservation);
+    }
+  }
   res.json(reservations);
 }
 
@@ -253,6 +267,8 @@ async function getReservationByToken(req, res) {
   if (!reservation) {
     return res.status(404).json({ message: 'No encontramos esa reserva' });
   }
+
+  await ensureReservationNumber(reservation);
 
   res.json(toManageView(reservation));
 }

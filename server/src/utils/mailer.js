@@ -67,15 +67,16 @@ async function sendReservationNotification(reservation) {
     return;
   }
 
-  const { name, email, phone, checkIn, checkOut, guests, origin, breakfast, message } = reservation;
+  const { name, email, phone, checkIn, checkOut, guests, origin, breakfast, message, reservationNumber } = reservation;
 
   await getTransporter().sendMail({
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: process.env.NOTIFICATION_EMAIL,
-    subject: `Nueva reserva: ${name} (${formatDate(checkIn)} - ${formatDate(checkOut)})`,
-    text: `Nueva solicitud de reserva\n\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nLugar de procedencia: ${origin || '(no indicado)'}\nDesayuno: ${breakfast ? 'Sí' : 'No'}\nMensaje: ${message || '(sin mensaje)'}`,
+    subject: `Nueva reserva ${reservationNumber || ''}: ${name} (${formatDate(checkIn)} - ${formatDate(checkOut)})`,
+    text: `Nueva solicitud de reserva\n\nNúmero de reserva: ${reservationNumber || '(sin número)'}\nNombre: ${name}\nEmail: ${email}\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nLugar de procedencia: ${origin || '(no indicado)'}\nDesayuno: ${breakfast ? 'Sí' : 'No'}\nMensaje: ${message || '(sin mensaje)'}`,
     html: `
       <h2>Nueva solicitud de reserva</h2>
+      <p><strong>Número de reserva:</strong> ${reservationNumber || '(sin número)'}</p>
       <p><strong>Nombre:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Teléfono:</strong> ${phone}</p>
@@ -95,17 +96,18 @@ async function sendReservationConfirmation(reservation) {
     return;
   }
 
-  const { name, email, checkIn, checkOut, guests } = reservation;
+  const { name, email, checkIn, checkOut, guests, reservationNumber } = reservation;
   const link = manageLinkBlock(reservation);
 
   await getTransporter().sendMail({
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: email,
-    subject: `Recibimos tu solicitud de reserva — Sueños de Ángeles`,
-    text: `Hola ${name},\n\n¡Gracias por tu interés en Sueños de Ángeles! Recibimos tu solicitud de reserva con estos datos:\n\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\n\nEs una solicitud pendiente de confirmación: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
+    subject: `Recibimos tu solicitud de reserva ${reservationNumber || ''} — Sueños de Ángeles`,
+    text: `Hola ${name},\n\n¡Gracias por tu interés en Sueños de Ángeles! Recibimos tu solicitud de reserva con estos datos:\n\nNúmero de reserva: ${reservationNumber || '(sin número)'}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\n\nEs una solicitud pendiente de confirmación: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
     html: `
       <h2>¡Gracias por tu solicitud, ${name}!</h2>
       <p>Recibimos tu solicitud de reserva en <strong>Sueños de Ángeles</strong> con estos datos:</p>
+      <p><strong>Número de reserva:</strong> ${reservationNumber || '(sin número)'}</p>
       <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
       <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
@@ -137,7 +139,7 @@ async function sendReservationStatusUpdate(reservation) {
     return;
   }
 
-  const { name, email, checkIn, checkOut, guests, status } = reservation;
+  const { name, email, checkIn, checkOut, guests, status, reservationNumber } = reservation;
   const copy = STATUS_COPY[status];
 
   if (!copy) {
@@ -150,10 +152,11 @@ async function sendReservationStatusUpdate(reservation) {
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: email,
     subject: copy.subject,
-    text: `Hola ${name},\n\n${copy.intro.replace(/<\/?strong>/g, '')}\n\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
+    text: `Hola ${name},\n\n${copy.intro.replace(/<\/?strong>/g, '')}\n\nNúmero de reserva: ${reservationNumber || '(sin número)'}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
     html: `
       <h2>Hola ${name},</h2>
       <p>${copy.intro}</p>
+      <p><strong>Número de reserva:</strong> ${reservationNumber || '(sin número)'}</p>
       <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
       <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
@@ -169,16 +172,17 @@ async function sendReservationUpdatedByCustomer(reservation, cancelled = false) 
     return;
   }
 
-  const { name, email, phone, checkIn, checkOut, guests, message } = reservation;
+  const { name, email, phone, checkIn, checkOut, guests, message, reservationNumber } = reservation;
   const action = cancelled ? 'canceló' : 'modificó';
 
   await getTransporter().sendMail({
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: process.env.NOTIFICATION_EMAIL,
-    subject: `El cliente ${action} su reserva: ${name}`,
-    text: `El cliente ${name} (${email}) ${action} su reserva.\n\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}\n\n${cancelled ? 'Quedó cancelada.' : 'Quedó pendiente de reconfirmación.'}`,
+    subject: `El cliente ${action} su reserva ${reservationNumber || ''}: ${name}`,
+    text: `El cliente ${name} (${email}) ${action} su reserva.\n\nNúmero de reserva: ${reservationNumber || '(sin número)'}\nTeléfono: ${phone}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\nMensaje: ${message || '(sin mensaje)'}\n\n${cancelled ? 'Quedó cancelada.' : 'Quedó pendiente de reconfirmación.'}`,
     html: `
       <h2>El cliente ${action} su reserva</h2>
+      <p><strong>Número de reserva:</strong> ${reservationNumber || '(sin número)'}</p>
       <p><strong>Nombre:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Teléfono:</strong> ${phone}</p>

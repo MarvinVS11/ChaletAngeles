@@ -98,6 +98,7 @@ function Reservations() {
           <table className="admin-table">
             <thead>
               <tr>
+                <th>N.º reserva</th>
                 <th>Huésped</th>
                 <th>Contacto</th>
                 <th>Check-in</th>
@@ -114,6 +115,7 @@ function Reservations() {
                 const dirty = drafts[r._id] !== r.status;
                 return (
                   <tr key={r._id}>
+                    <td>{r.reservationNumber || '—'}</td>
                     <td>{r.name}</td>
                     <td>
                       {r.email}

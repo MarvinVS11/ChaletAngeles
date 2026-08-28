@@ -34,6 +34,7 @@ function EditReservation() {
           breakfast: reservation.breakfast ? 'true' : 'false',
           message: reservation.message || '',
           status: reservation.status,
+          reservationNumber: reservation.reservationNumber || '',
         });
       })
       .catch(() => setStatus({ type: 'error', message: 'No se pudo cargar la reserva.' }))
@@ -79,7 +80,7 @@ function EditReservation() {
 
   return (
     <div className="page">
-      <h1>Editar reserva</h1>
+      <h1>Editar reserva{form.reservationNumber ? ` ${form.reservationNumber}` : ''}</h1>
 
       <form onSubmit={handleSubmit} className="admin-form">
         <label>

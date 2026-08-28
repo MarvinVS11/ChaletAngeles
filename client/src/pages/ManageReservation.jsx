@@ -113,7 +113,7 @@ function ManageReservation() {
   return (
     <div className="page manage-reservation">
       <div className="page-hero">
-        <h1>Mi reserva</h1>
+        <h1>Mi reserva{reservation.reservationNumber ? ` ${reservation.reservationNumber}` : ''}</h1>
         <p>Hola {reservation.name}, acá podés revisar el estado de tu reserva.</p>
       </div>
 

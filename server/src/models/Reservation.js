@@ -17,6 +17,7 @@ const reservationSchema = new mongoose.Schema(
       default: 'pending',
     },
     manageToken: { type: String, unique: true, sparse: true },
+    reservationNumber: { type: String, unique: true, sparse: true },
   },
   { timestamps: true }
 );
