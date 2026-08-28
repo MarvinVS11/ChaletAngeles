@@ -31,8 +31,25 @@ function hasSmtpConfig() {
 const RESERVATION_FORM_FALLBACK_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSfNUsv-CBeK7bAdPdV6voZPBC3fZNnBbrRsK2bT8lXVGq5JCw/viewform';
 
+function getPublicSiteBase() {
+  // CLIENT_URL puede traer varios origenes separados por coma (por CORS),
+  // ej: "https://chalet-angeles-client.vercel.app,https://chaletangelescr.com".
+  // Para los enlaces de los correos preferimos el dominio propio; se puede
+  // forzar uno especifico con PUBLIC_SITE_URL.
+  const raw = process.env.PUBLIC_SITE_URL || process.env.CLIENT_URL || '';
+  const origins = raw
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (origins.length === 0) return null;
+  const custom = origins.find(
+    (o) => !o.includes('.vercel.app') && !o.includes('localhost')
+  );
+  return custom || origins[0];
+}
+
 function buildManageLink(reservation) {
-  const base = process.env.CLIENT_URL;
+  const base = getPublicSiteBase();
   if (!base || !reservation.manageToken) {
     return null;
   }
