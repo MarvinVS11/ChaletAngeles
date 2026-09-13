@@ -147,6 +147,7 @@ function ManageReservation() {
                 onChange={handleChange}
                 required
               />
+              <span className="field-hint">Hora de entrada: a partir de las 2:00 p.m.</span>
             </label>
             <label>
               Check-out
@@ -157,6 +158,7 @@ function ManageReservation() {
                 onChange={handleChange}
                 required
               />
+              <span className="field-hint">Hora de salida: antes de las 11:00 a.m.</span>
             </label>
           </div>
 

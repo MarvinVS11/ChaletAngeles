@@ -898,6 +898,14 @@ main {
   outline-offset: 1px;
 }
 
+.field-hint {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text-muted, #6b6b6b);
+}
+
 .form-row {
   display: flex;
   gap: 16px;

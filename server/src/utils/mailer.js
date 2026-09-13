@@ -120,13 +120,13 @@ async function sendReservationConfirmation(reservation) {
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: email,
     subject: `Recibimos tu solicitud de reserva ${reservationNumber || ''} — Sueños de Ángeles`,
-    text: `Hola ${name},\n\n¡Gracias por tu interés en Sueños de Ángeles! Recibimos tu solicitud de reserva con estos datos:\n\nNúmero de reserva: ${reservationNumber || '(sin número)'}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}\n\nEs una solicitud pendiente de confirmación: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
+    text: `Hola ${name},\n\n¡Gracias por tu interés en Sueños de Ángeles! Recibimos tu solicitud de reserva con estos datos:\n\nNúmero de reserva: ${reservationNumber || '(sin número)'}\nCheck-in: ${formatDate(checkIn)} (entrada a partir de las 2:00 p.m.)\nCheck-out: ${formatDate(checkOut)} (salida antes de las 11:00 a.m.)\nHuéspedes: ${guests}\n\nEs una solicitud pendiente de confirmación: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
     html: `
       <h2>¡Gracias por tu solicitud, ${name}!</h2>
       <p>Recibimos tu solicitud de reserva en <strong>Sueños de Ángeles</strong> con estos datos:</p>
       <p><strong>Número de reserva:</strong> ${reservationNumber || '(sin número)'}</p>
-      <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
-      <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
+      <p><strong>Check-in:</strong> ${formatDate(checkIn)} <span style="color:#666;">(entrada a partir de las 2:00 p.m.)</span></p>
+      <p><strong>Check-out:</strong> ${formatDate(checkOut)} <span style="color:#666;">(salida antes de las 11:00 a.m.)</span></p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
       <p>Es una solicitud <strong>pendiente de confirmación</strong>: pronto nos pondremos en contacto para confirmar disponibilidad y coordinar los detalles.</p>
       ${link.html}
@@ -169,13 +169,13 @@ async function sendReservationStatusUpdate(reservation) {
     from: `"Sueños de Ángeles" <${process.env.SMTP_USER}>`,
     to: email,
     subject: copy.subject,
-    text: `Hola ${name},\n\n${copy.intro.replace(/<\/?strong>/g, '')}\n\nNúmero de reserva: ${reservationNumber || '(sin número)'}\nCheck-in: ${formatDate(checkIn)}\nCheck-out: ${formatDate(checkOut)}\nHuéspedes: ${guests}${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
+    text: `Hola ${name},\n\n${copy.intro.replace(/<\/?strong>/g, '')}\n\nNúmero de reserva: ${reservationNumber || '(sin número)'}\nCheck-in: ${formatDate(checkIn)} (entrada a partir de las 2:00 p.m.)\nCheck-out: ${formatDate(checkOut)} (salida antes de las 11:00 a.m.)\nHuéspedes: ${guests}${link.text}\n\n¡Gracias!\nSueños de Ángeles`,
     html: `
       <h2>Hola ${name},</h2>
       <p>${copy.intro}</p>
       <p><strong>Número de reserva:</strong> ${reservationNumber || '(sin número)'}</p>
-      <p><strong>Check-in:</strong> ${formatDate(checkIn)}</p>
-      <p><strong>Check-out:</strong> ${formatDate(checkOut)}</p>
+      <p><strong>Check-in:</strong> ${formatDate(checkIn)} <span style="color:#666;">(entrada a partir de las 2:00 p.m.)</span></p>
+      <p><strong>Check-out:</strong> ${formatDate(checkOut)} <span style="color:#666;">(salida antes de las 11:00 a.m.)</span></p>
       <p><strong>Huéspedes:</strong> ${guests}</p>
       ${link.html}
       <p>¡Gracias por elegirnos!</p>

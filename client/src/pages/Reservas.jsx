@@ -76,10 +76,12 @@ function Reservas() {
           <label>
             Check-in
             <input type="date" name="checkIn" value={form.checkIn} onChange={handleChange} required />
+            <span className="field-hint">Hora de entrada: a partir de las 2:00 p.m.</span>
           </label>
           <label>
             Check-out
             <input type="date" name="checkOut" value={form.checkOut} onChange={handleChange} required />
+            <span className="field-hint">Hora de salida: antes de las 11:00 a.m.</span>
           </label>
         </div>
 
