@@ -6,6 +6,8 @@ const emptyForm = {
   title: '',
   description: '',
   location: '',
+  heroEyebrow: '',
+  heroDescription: '',
   pricePerNight: '',
   maxGuests: '',
   amenities: '',
@@ -21,6 +23,8 @@ function toForm(info) {
     title: info.title || '',
     description: info.description || '',
     location: info.location || '',
+    heroEyebrow: info.heroEyebrow || 'Tranquilidad, paz y naturaleza',
+    heroDescription: info.heroDescription || '',
     pricePerNight: info.pricePerNight ?? '',
     maxGuests: info.maxGuests ?? '',
     amenities: (info.amenities || []).join('\n'),
@@ -79,6 +83,8 @@ function ChaletEditor() {
       title: form.title,
       description: form.description,
       location: form.location,
+      heroEyebrow: form.heroEyebrow,
+      heroDescription: form.heroDescription,
       pricePerNight: Number(form.pricePerNight),
       maxGuests: Number(form.maxGuests),
       amenities: form.amenities.split('\n').map((s) => s.trim()).filter(Boolean),
@@ -125,6 +131,17 @@ function ChaletEditor() {
         </label>
 
         <label>
+          Insignia de portada (texto pequeño sobre el título)
+          <input
+            type="text"
+            name="heroEyebrow"
+            value={form.heroEyebrow}
+            onChange={handleChange}
+            placeholder="Tranquilidad, paz y naturaleza"
+          />
+        </label>
+
+        <label>
           Ubicación
           <input
             type="text"
@@ -132,6 +149,17 @@ function ChaletEditor() {
             value={form.location}
             onChange={handleChange}
             required
+          />
+        </label>
+
+        <label>
+          Descripción de portada (párrafo del inicio, bajo el título)
+          <textarea
+            name="heroDescription"
+            value={form.heroDescription}
+            onChange={handleChange}
+            rows="3"
+            placeholder="Descubrí este rincón de montaña como un espacio de descanso..."
           />
         </label>
 
