@@ -906,6 +906,61 @@ main {
   color: var(--text-muted, #6b6b6b);
 }
 
+.payment-info {
+  max-width: 520px;
+  margin-top: 32px;
+  padding: 24px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: 2px;
+}
+
+.payment-info h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  margin: 0 0 8px;
+  color: var(--text-h);
+}
+
+.payment-info .rule {
+  display: block;
+  width: 48px;
+  height: 2px;
+  background: var(--gold);
+  margin-bottom: 16px;
+}
+
+.payment-details {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-details dt {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted, #6b6b6b);
+}
+
+.payment-details dd {
+  margin: 2px 0 0;
+  font-size: 16px;
+  color: var(--text-h);
+  word-break: break-all;
+}
+
+.payment-note {
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+  font-weight: 600;
+  color: var(--text-h);
+}
+
 .form-row {
   display: flex;
   gap: 16px;

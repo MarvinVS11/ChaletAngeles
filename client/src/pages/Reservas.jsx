@@ -122,6 +122,32 @@ function Reservas() {
         {status.type && <p className={`status-message ${status.type}`}>{status.message}</p>}
       </form>
 
+      <aside className="payment-info">
+        <h2>Información de pagos</h2>
+        <span className="rule" />
+        <dl className="payment-details">
+          <div>
+            <dt>Cliente</dt>
+            <dd>HUGO ANTONIO VILLALOBOS SANCHEZ</dd>
+          </div>
+          <div>
+            <dt>Número de cuenta BAC</dt>
+            <dd>971302161</dd>
+          </div>
+          <div>
+            <dt>Número de cuenta IBAN</dt>
+            <dd>CR48010200009713021617</dd>
+          </div>
+          <div>
+            <dt>SINPE Móvil</dt>
+            <dd>8713-1515</dd>
+          </div>
+        </dl>
+        <p className="payment-note">
+          El pago debe realizarse en su totalidad el día antes de su llegada.
+        </p>
+      </aside>
+
       <p className="description" style={{ marginTop: 24 }}>
         ¿Tenés problemas para completar la reserva desde este formulario?{' '}
         <a
