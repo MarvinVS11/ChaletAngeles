@@ -137,7 +137,6 @@ function ChaletEditor() {
             name="heroEyebrow"
             value={form.heroEyebrow}
             onChange={handleChange}
-            placeholder="Tranquilidad, paz y naturaleza"
           />
         </label>
 
@@ -159,7 +158,6 @@ function ChaletEditor() {
             value={form.heroDescription}
             onChange={handleChange}
             rows="3"
-            placeholder="Descubrí este rincón de montaña como un espacio de descanso..."
           />
         </label>
 
@@ -209,7 +207,6 @@ function ChaletEditor() {
               name="secondaryTitle"
               value={form.secondaryTitle}
               onChange={handleChange}
-              placeholder="Un lugar para todos"
             />
           </label>
 
