@@ -23,14 +23,14 @@ function toForm(info) {
     title: info.title || '',
     description: info.description || '',
     location: info.location || '',
-    heroEyebrow: info.heroEyebrow || 'Tranquilidad, paz y naturaleza',
+    heroEyebrow: info.heroEyebrow || '',
     heroDescription: info.heroDescription || '',
     pricePerNight: info.pricePerNight ?? '',
     maxGuests: info.maxGuests ?? '',
     amenities: (info.amenities || []).join('\n'),
     rules: (info.rules || []).join('\n'),
     image: info.image || '',
-    secondaryTitle: info.secondaryTitle || 'Un lugar para todos',
+    secondaryTitle: info.secondaryTitle || '',
     secondaryText: info.secondaryText || '',
     secondaryImage: info.secondaryImage || '',
   };
@@ -209,6 +209,7 @@ function ChaletEditor() {
               name="secondaryTitle"
               value={form.secondaryTitle}
               onChange={handleChange}
+              placeholder="Un lugar para todos"
             />
           </label>
 

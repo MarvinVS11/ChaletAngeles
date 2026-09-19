@@ -12,6 +12,9 @@ async function seed() {
     description:
       'Un chalet acogedor en el hermoso pueblo rural de Los Ángeles, en las montañas de San Ramón de Alajuela, Costa Rica. Un espacio pensado para familias, parejas y pequeños grupos de amigos que buscan paz, tranquilidad y naturaleza, con instalaciones accesibles para personas de todas las edades.',
     location: 'Los Ángeles, San Ramón de Alajuela, Costa Rica',
+    heroEyebrow: 'Tranquilidad, paz y naturaleza',
+    heroDescription:
+      'Descubrí este rincón de montaña como un espacio de descanso: familias, parejas y grupos de amigos encuentran aquí paz, tranquilidad y naturaleza.',
     pricePerNight: 45000,
     maxGuests: 8,
     amenities: [
