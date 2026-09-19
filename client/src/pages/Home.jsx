@@ -33,13 +33,10 @@ function Home() {
   return (
     <div className="page home">
       <section className="hero" style={heroBackground}>
-        <p className="eyebrow">{info?.heroEyebrow || 'Tranquilidad, paz y naturaleza'}</p>
+        {info?.heroEyebrow ? <p className="eyebrow">{info.heroEyebrow}</p> : null}
         <h1>{info?.title || 'Sueños de Ángeles'}</h1>
         <p className="location">{info?.location || 'Los Ángeles, San Ramón de Alajuela, Costa Rica'}</p>
-        <p className="description">
-          {info?.heroDescription ||
-            'Descubrí este rincón de montaña como un espacio de descanso: familias, parejas y grupos de amigos encuentran aquí paz, tranquilidad y naturaleza.'}
-        </p>
+        {info?.heroDescription ? <p className="description">{info.heroDescription}</p> : null}
         <div className="hero-actions">
           <Link to="/reservas" className="btn-primary">
             Reservar ahora
