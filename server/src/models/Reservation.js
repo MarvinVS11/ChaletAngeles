@@ -18,6 +18,7 @@ const reservationSchema = new mongoose.Schema(
     },
     manageToken: { type: String, unique: true, sparse: true },
     reservationNumber: { type: String, unique: true, sparse: true },
+    googleEventId: { type: String },
   },
   { timestamps: true }
 );

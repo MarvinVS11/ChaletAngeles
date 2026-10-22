@@ -11,6 +11,7 @@ const {
   getReservationByToken,
   updateReservationByToken,
   cancelReservationByToken,
+  syncCalendar,
 } = require('../controllers/reservationController');
 const requireAuth = require('../middleware/auth');
 
@@ -46,6 +47,7 @@ function validate(req, res, next) {
 
 router.get('/availability', checkAvailability);
 router.get('/', requireAuth, listReservations);
+router.post('/calendar-sync', requireAuth, syncCalendar);
 
 router.post('/', reservationValidators, validate, createReservation);
 

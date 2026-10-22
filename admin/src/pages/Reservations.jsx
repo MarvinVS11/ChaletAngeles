@@ -20,6 +20,7 @@ function Reservations() {
   const [savingId, setSavingId] = useState(null);
   const [savedId, setSavedId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [calendarSync, setCalendarSync] = useState({ busy: false, type: null, message: '' });
 
   useEffect(() => {
     loadReservations();
@@ -74,6 +75,25 @@ function Reservations() {
     }
   }
 
+  async function handleCalendarSync() {
+    setCalendarSync({ busy: true, type: null, message: '' });
+    try {
+      const res = await api.post('/reservations/calendar-sync');
+      const { synced, failed } = res.data;
+      const message =
+        synced === 0 && failed === 0
+          ? 'El calendario ya está al día: no había reservas pendientes de subir.'
+          : `Se subieron ${synced} reserva(s) a Google Calendar${failed ? `; ${failed} no se pudieron subir` : ''}.`;
+      setCalendarSync({ busy: false, type: failed ? 'error' : 'success', message });
+    } catch (err) {
+      setCalendarSync({
+        busy: false,
+        type: 'error',
+        message: err.response?.data?.message || 'No se pudo sincronizar con Google Calendar.',
+      });
+    }
+  }
+
   if (loading) return <p className="status-message">Cargando...</p>;
 
   return (
@@ -85,11 +105,25 @@ function Reservations() {
             Al guardar un cambio de estado, se le envía un correo automático al cliente avisándole.
           </p>
         </div>
-        <Link to="/reservas/nueva" className="btn-primary">
-          + Nueva reserva
-        </Link>
+        <div className="page-header-actions">
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={handleCalendarSync}
+            disabled={calendarSync.busy}
+            title="Sube a Google Calendar las reservas activas que todavía no están en el calendario"
+          >
+            {calendarSync.busy ? 'Sincronizando…' : 'Sincronizar Google Calendar'}
+          </button>
+          <Link to="/reservas/nueva" className="btn-primary">
+            + Nueva reserva
+          </Link>
+        </div>
       </div>
       {error && <p className="status-message error">{error}</p>}
+      {calendarSync.message && (
+        <p className={`status-message ${calendarSync.type}`}>{calendarSync.message}</p>
+      )}
 
       {reservations.length === 0 ? (
         <p>No hay reservas registradas todavía.</p>

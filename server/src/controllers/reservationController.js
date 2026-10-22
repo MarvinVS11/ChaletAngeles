@@ -10,6 +10,11 @@ const {
   sendReservationStatusUpdate,
   sendReservationUpdatedByCustomer,
 } = require('../utils/mailer');
+const {
+  syncReservation,
+  removeReservationEvent,
+  syncPendingReservations,
+} = require('../utils/googleCalendar');
 
 const EDIT_CUTOFF_HOURS = 48;
 
@@ -112,6 +117,8 @@ async function createReservation(req, res) {
     console.error('No se pudo enviar el correo de confirmación al cliente:', err.message);
   }
 
+  await syncReservation(reservation);
+
   res.status(201).json(reservation);
 }
 
@@ -161,6 +168,8 @@ async function createReservationByAdmin(req, res) {
     console.error('No se pudo enviar el correo al cliente de la reserva cargada por el admin:', err.message);
   }
 
+  await syncReservation(reservation);
+
   res.status(201).json(reservation);
 }
 
@@ -198,6 +207,8 @@ async function updateReservationStatus(req, res) {
   } catch (err) {
     console.error('No se pudo enviar el correo de cambio de estado:', err.message);
   }
+
+  await syncReservation(reservation);
 
   res.json(reservation);
 }
@@ -257,6 +268,8 @@ async function updateReservation(req, res) {
       console.error('No se pudo enviar el correo de cambio de estado:', err.message);
     }
   }
+
+  await syncReservation(reservation);
 
   res.json(reservation);
 }
@@ -329,6 +342,8 @@ async function updateReservationByToken(req, res) {
     console.error('No se pudo notificar al admin del cambio del cliente:', err.message);
   }
 
+  await syncReservation(reservation);
+
   res.json(toManageView(reservation));
 }
 
@@ -364,6 +379,8 @@ async function cancelReservationByToken(req, res) {
     console.error('No se pudo notificar al admin de la cancelación:', err.message);
   }
 
+  await syncReservation(reservation);
+
   res.json(toManageView(reservation));
 }
 
@@ -374,7 +391,24 @@ async function deleteReservation(req, res) {
     return res.status(404).json({ message: 'Reserva no encontrada' });
   }
 
+  await removeReservationEvent(reservation);
+
   res.status(204).end();
+}
+
+async function syncCalendar(req, res) {
+  try {
+    const result = await syncPendingReservations();
+    if (!result.configured) {
+      return res.status(503).json({
+        message: 'Google Calendar no está configurado en el servidor todavía.',
+        ...result,
+      });
+    }
+    res.json(result);
+  } catch (err) {
+    res.status(502).json({ message: `No se pudo conectar con Google Calendar: ${err.message}` });
+  }
 }
 
 module.exports = {
@@ -388,4 +422,5 @@ module.exports = {
   getReservationByToken,
   updateReservationByToken,
   cancelReservationByToken,
+  syncCalendar,
 };
